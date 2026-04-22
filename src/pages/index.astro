@@ -19,6 +19,9 @@ const quantifiedExaflops = facilities.reduce(
 const operationalCount = facilities.filter(
   (facility) => facility.status === 'operational',
 ).length;
+const upgradingCount = facilities.filter(
+  (facility) => facility.status === 'upgrading',
+).length;
 const plannedCount = facilities.filter(
   (facility) => facility.status === 'planned',
 ).length;
@@ -33,9 +36,9 @@ try {
 
 const stats = [
   {
-    label: 'Quantified today',
+    label: 'Published AI-exaflops',
     value: `${quantifiedExaflops}`,
-    sub: 'AI-exaflops publicly disclosed',
+    sub: '21 Isambard-AI + 1 Dawn',
   },
   {
     label: 'Target by 2030',
@@ -45,7 +48,7 @@ const stats = [
   {
     label: 'Mapped facilities',
     value: `${facilities.length}`,
-    sub: `${operationalCount} operational, ${plannedCount} planned`,
+    sub: `${operationalCount} operational · ${upgradingCount} upgrading · ${plannedCount} planned`,
   },
   {
     label: 'Flagship AIRR core',
