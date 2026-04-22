@@ -25,18 +25,19 @@ If the session ends mid-execution, a fresh Claude session can pick up from here:
 | Resume | 2026-04-21 | Tasks 2-3 | `working tree` | Added Zod facility schema, Vitest config, unit tests, seed `isambard-ai.json`, loader, and validator; `npm test`, `npm run validate`, and `npm run build` all pass. |
 | Feature buildout | 2026-04-21 | Tasks 4+ | `working tree` | Populated all 22 facility JSONs, added filters/format/trajectory libs, built the interactive explorer, charts, facility pages, CI, deploy docs, and Playwright smoke tests. |
 | Verification | 2026-04-21 | QA | `working tree` | `npm run validate`, `npm test`, `npm run build`, and `npm run test:e2e` all pass. |
+| Tooling fix | 2026-04-22 | Typecheck gap | `working tree` | Installed `@astrojs/check` + `@types/node`, added `typecheck` npm script, wired CI step, silenced `is:inline` hint on Base.astro. `npm run typecheck` now reports 0/0/0. |
 
 ## Current state
 
-- **Current task:** Ready for review or commit.
-- **Next action:** Decide whether to commit the worktree changes or continue with visual/design refinement.
+- **Current task:** Library reconciliation (swap custom SVG map for MapLibre + PMTiles, custom charts for Recharts).
+- **Next action:** Install map/chart dependencies and refactor MapExplorer/TrajectoryChart/CountryBenchmark.
 - **Open review issues:** none.
 
 ## Notes
 
-- The shipped implementation stays within the repo rule of avoiding new dependencies without an explicit request.
-- For that reason, the explorer uses a custom abstract UK map and custom SVG/HTML charts instead of adding MapLibre, PMTiles, or Recharts.
-- `npx astro check` is not currently runnable because `@astrojs/check` is not installed in the project.
+- The initial shipped implementation stayed within the repo rule of avoiding new dependencies; custom SVG map + charts were used as a placeholder.
+- The user has now approved the plan's original library choices (MapLibre GL, PMTiles, Recharts) — reconciliation is the next task.
+- `npm run typecheck` is wired via `astro check` and green.
 
 ## Model strategy
 
