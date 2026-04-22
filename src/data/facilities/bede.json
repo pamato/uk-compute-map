@@ -1,0 +1,52 @@
+{
+  "slug": "bede",
+  "name": "Bede",
+  "category": "regional",
+  "status": "operational",
+  "location": {
+    "institution": "Durham University (N8)",
+    "city": "Durham",
+    "nation": "England",
+    "itl1": "North East",
+    "lat": 54.7677,
+    "lon": -1.5717
+  },
+  "operator": "N8 Research Partnership / Durham University",
+  "funder": "N8 universities / EPSRC access",
+  "opened": "2020-05",
+  "decommissioned": null,
+  "oneLiner": "An N8 research GPU system that pairs V100, T4, and Grace-Hopper nodes for small and medium-scale AI work.",
+  "summary": "Bede supports researchers across the N8 universities and offers a compact but useful mix of accelerators for AI workloads. The system includes IBM Power9 nodes with NVIDIA V100 GPUs, a smaller NVIDIA T4 inference partition, and newer Grace-Hopper pilot nodes introduced in 2024. This combination makes Bede especially well suited to experimentation with model serving, moderate-scale training, and CPU-GPU integrated workflows.",
+  "keyFacts": {
+    "hardware": "32 IBM Power9 dual-CPU nodes with NVIDIA V100 GPUs, 4 NVIDIA T4 inference nodes, and 3 Grace-Hopper pilot nodes",
+    "performance": "Regional GPU system focused on small and medium-scale AI workloads",
+    "funding": "N8 partnership with additional EPSRC access routes",
+    "energy": "Shared regional cluster with mixed-generation accelerator estate"
+  },
+  "access": {
+    "route": "N8 researchers use Bede without charge; external researchers can apply via EPSRC access routes.",
+    "accessType": "public-application"
+  },
+  "useCases": [
+    "Inference serving on T4 nodes",
+    "Deep-learning research for N8 universities",
+    "Grace-Hopper experimentation for CPU-GPU integration"
+  ],
+  "hardwareTags": [
+    "nvidia-gpu",
+    "grace-hopper"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "Bede Supercomputer",
+      "url": "https://n8cir.org.uk/bede/"
+    },
+    {
+      "label": "UK Compute Roadmap - GOV.UK",
+      "url": "https://www.gov.uk/government/publications/uk-compute-roadmap/uk-compute-roadmap"
+    }
+  ]
+}

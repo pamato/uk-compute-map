@@ -1,0 +1,57 @@
+{
+  "slug": "eidf",
+  "name": "Edinburgh International Data Facility",
+  "category": "specialist",
+  "status": "operational",
+  "location": {
+    "institution": "EPCC",
+    "city": "Edinburgh",
+    "nation": "Scotland",
+    "itl1": "Scotland",
+    "lat": 55.9222,
+    "lon": -3.1722
+  },
+  "operator": "EPCC",
+  "funder": "Data-Driven Innovation programme",
+  "opened": "2022-01",
+  "decommissioned": null,
+  "oneLiner": "EPCC's specialist AI and data platform, combining GPUs, cloud services, and Europe's largest Cerebras CS-3 cluster.",
+  "summary": "The Edinburgh International Data Facility is a data analytics, storage, and AI platform built by EPCC to support the Data-Driven Innovation programme. Its GPU service offers a containerised environment with NVIDIA H200, H100, and A100 GPUs managed through Kubernetes, while its Cerebras deployment links four CS-3 wafer-scale engines through SwarmX and MemoryX to support very large model training and inference. The mix of cloud flexibility and specialist accelerators makes EIDF one of the UK's most distinctive AI inference platforms.",
+  "keyFacts": {
+    "hardware": "16 NVIDIA H200, 136 NVIDIA H100, 224 NVIDIA A100 GPUs plus four Cerebras CS-3 systems",
+    "performance": "Large-model training up to 1 trillion parameters; Cerebras inference above 2,000 tokens per second",
+    "funding": "Data-Driven Innovation / University of Edinburgh investment",
+    "energy": "Shared national facility optimised for containerised, pooled usage"
+  },
+  "access": {
+    "route": "University of Edinburgh researchers and DDI partners use EIDF directly; external public-sector projects can apply through the EIDF service desk.",
+    "accessType": "public-application"
+  },
+  "useCases": [
+    "Containerised AI inference",
+    "Very large language model experimentation",
+    "Secure data-science and analytics workflows"
+  ],
+  "hardwareTags": [
+    "nvidia-gpu",
+    "cerebras",
+    "cloud"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "EIDF GPU Service",
+      "url": "https://edinburgh-international-data-facility.ed.ac.uk/services/computing/gpu-service"
+    },
+    {
+      "label": "EIDF Cerebras service",
+      "url": "https://edinburgh-international-data-facility.ed.ac.uk/services/computing/cerebras-cs"
+    },
+    {
+      "label": "EPCC - EIDF data science cloud",
+      "url": "https://www.epcc.ed.ac.uk/whats-happening/articles/epcc-and-stackhpc-deliver-highly-available-data-science-cloud-eidf"
+    }
+  ]
+}

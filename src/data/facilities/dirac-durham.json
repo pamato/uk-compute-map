@@ -1,0 +1,51 @@
+{
+  "slug": "dirac-durham",
+  "name": "DiRAC - Memory-Intensive",
+  "category": "mission",
+  "status": "operational",
+  "location": {
+    "institution": "Durham University",
+    "city": "Durham",
+    "nation": "England",
+    "itl1": "North East",
+    "lat": 54.7677,
+    "lon": -1.5717
+  },
+  "operator": "DiRAC / Durham University",
+  "funder": "STFC",
+  "opened": "2018-01",
+  "decommissioned": null,
+  "oneLiner": "DiRAC's memory-heavy Durham service for simulations and neural workloads that need very large RAM footprints.",
+  "summary": "The Durham DiRAC memory-intensive service is built for workloads where memory capacity and fast interconnect are more important than sheer accelerator count. The published specification lists 80,240 CPU cores, 731 TB of memory, and 17.1 PB of storage on a non-blocking HDR InfiniBand network. That profile makes it useful for simulations, giant parameter studies, and deep-learning jobs that need unusually large in-memory state.",
+  "keyFacts": {
+    "hardware": "80,240 CPU cores, 731 TB memory, and 17.1 PB storage with non-blocking HDR InfiniBand",
+    "performance": "Mission service optimised for very large memory footprints",
+    "funding": "STFC / DiRAC national service",
+    "energy": "Shared research infrastructure tuned for high-memory scientific workloads"
+  },
+  "access": {
+    "route": "Access is allocated through DiRAC's central committee and aligned with the programme's scientific mission.",
+    "accessType": "public-application"
+  },
+  "useCases": [
+    "Memory-intensive simulations",
+    "Large-parameter neural network experiments",
+    "Data-heavy scientific modelling"
+  ],
+  "hardwareTags": [
+    "cpu-only"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "DiRAC - Our services",
+      "url": "https://dirac.ac.uk/our-services/"
+    },
+    {
+      "label": "UK Compute Roadmap - GOV.UK",
+      "url": "https://www.gov.uk/government/publications/uk-compute-roadmap/uk-compute-roadmap"
+    }
+  ]
+}

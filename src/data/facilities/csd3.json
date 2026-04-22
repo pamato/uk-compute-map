@@ -1,0 +1,56 @@
+{
+  "slug": "csd3",
+  "name": "Cambridge CSD3",
+  "category": "regional",
+  "status": "operational",
+  "location": {
+    "institution": "University of Cambridge",
+    "city": "Cambridge",
+    "nation": "England",
+    "itl1": "East of England",
+    "lat": 52.2053,
+    "lon": 0.1218
+  },
+  "operator": "Cambridge Research Computing",
+  "funder": "University of Cambridge / EPSRC / partner projects",
+  "opened": "2018-01",
+  "decommissioned": null,
+  "oneLiner": "Cambridge's broad CPU and A100 GPU service, linking local research compute with Dawn and the EIDF.",
+  "summary": "CSD3 is Cambridge's shared service for data-driven discovery and hosts a wide range of CPU and GPU sub-clusters. The AI-relevant estate includes the Wilkes3 A100 GPU partition and several CPU partitions based on Cascade Lake, Ice Lake, and Sapphire Rapids systems, including high-bandwidth-memory nodes reserved for UKAEA projects. This breadth makes CSD3 a bridge between local institutional compute and larger national platforms such as Dawn and the EIDF GPU service.",
+  "keyFacts": {
+    "hardware": "Wilkes3 A100 GPU nodes plus Cascade Lake, Ice Lake, Sapphire Rapids, and Sapphire Rapids HBM CPU partitions",
+    "performance": "Around 30,412 CPU cores and 746,496 GPU cores with 8 PB storage",
+    "funding": "University and project-backed shared research service",
+    "energy": "Shared regional platform spanning multiple hardware generations"
+  },
+  "access": {
+    "route": "Accessible to academic and industrial users through Cambridge Research Computing and EPSRC-backed allocations.",
+    "accessType": "public-application"
+  },
+  "useCases": [
+    "A100-based model inference and training",
+    "Preprocessing and postprocessing on large CPU partitions",
+    "Hybrid workflows linked to Dawn and EIDF resources"
+  ],
+  "hardwareTags": [
+    "nvidia-gpu",
+    "cpu-only"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "CSD3 documentation - Ampere GPU nodes",
+      "url": "https://docs.hpc.cam.ac.uk/user-guide/a100.html"
+    },
+    {
+      "label": "CSD3 documentation - Sapphire Rapids nodes",
+      "url": "https://docs.hpc.cam.ac.uk/user-guide/sapphire.html"
+    },
+    {
+      "label": "CSD3 documentation - Sapphire Rapids HBM nodes",
+      "url": "https://docs.hpc.cam.ac.uk/user-guide/sapphire-hbm.html"
+    }
+  ]
+}

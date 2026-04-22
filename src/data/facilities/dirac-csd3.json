@@ -1,0 +1,52 @@
+{
+  "slug": "dirac-csd3",
+  "name": "DiRAC - Data-Intensive (CSD3)",
+  "category": "mission",
+  "status": "operational",
+  "location": {
+    "institution": "University of Cambridge",
+    "city": "Cambridge",
+    "nation": "England",
+    "itl1": "East of England",
+    "lat": 52.2053,
+    "lon": 0.1218
+  },
+  "operator": "DiRAC / Cambridge Research Computing",
+  "funder": "STFC",
+  "opened": "2018-01",
+  "decommissioned": null,
+  "oneLiner": "DiRAC's Cambridge data-intensive service, optimised for high-throughput scientific datasets and GPU-rich workflows.",
+  "summary": "The Cambridge DiRAC data-intensive service runs on the CSD3 platform and is designed for data-rich workloads in astrophysics and related fields. The published DiRAC summary highlights a combination of large CPU and GPU core counts, substantial RAM, and petabyte-scale storage, all connected by high-speed HDR networking. In AI terms, it is a good fit for inference pipelines that combine large datasets with GPU acceleration and heavy preprocessing.",
+  "keyFacts": {
+    "hardware": "Data-intensive service on CSD3 with large CPU and GPU estate, 157 TB memory, and 8 PB storage",
+    "performance": "Around 30,412 CPU cores and 746,496 GPU cores",
+    "funding": "STFC / DiRAC national service",
+    "energy": "Operated as part of Cambridge's shared high-performance infrastructure"
+  },
+  "access": {
+    "route": "Access is governed through the DiRAC Resource Allocation Committee and aligned with DiRAC's mission areas.",
+    "accessType": "public-application"
+  },
+  "useCases": [
+    "Large-dataset machine-learning workflows",
+    "Scientific GPU inference",
+    "High-throughput preprocessing and analysis"
+  ],
+  "hardwareTags": [
+    "nvidia-gpu",
+    "cpu-only"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "DiRAC - Our services",
+      "url": "https://dirac.ac.uk/our-services/"
+    },
+    {
+      "label": "CSD3 documentation - Ampere GPU nodes",
+      "url": "https://docs.hpc.cam.ac.uk/user-guide/a100.html"
+    }
+  ]
+}

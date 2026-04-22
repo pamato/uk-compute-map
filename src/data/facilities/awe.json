@@ -1,0 +1,47 @@
+{
+  "slug": "awe",
+  "name": "AWE HPC",
+  "category": "mission",
+  "status": "operational",
+  "location": {
+    "institution": "Atomic Weapons Establishment",
+    "city": "Aldermaston",
+    "nation": "England",
+    "itl1": "South East",
+    "lat": 51.3728,
+    "lon": -1.132
+  },
+  "operator": "Atomic Weapons Establishment",
+  "funder": "UK Government",
+  "opened": null,
+  "decommissioned": null,
+  "oneLiner": "A largely undisclosed national-security HPC programme that still matters to the UK's overall public compute picture.",
+  "summary": "The Atomic Weapons Establishment operates one of the UK's most powerful high-performance computing programmes for national security and safety analysis. Public technical details are limited, but the UK compute roadmap explicitly includes AWE's HPC capability in the wider public research and innovation compute ecosystem. Its relevance here is strategic rather than open access: it demonstrates the depth of sovereign UK capability even though usage is restricted.",
+  "keyFacts": {
+    "hardware": "Details not publicly disclosed",
+    "performance": "One of the UK's most powerful HPC programmes according to public roadmap context",
+    "funding": "UK Government national-security capability",
+    "energy": "Operational details not publicly disclosed"
+  },
+  "access": {
+    "route": "Access is restricted to authorised national-security and safety-analysis work.",
+    "accessType": "restricted"
+  },
+  "useCases": [
+    "National-security simulation",
+    "Safety analysis",
+    "Specialised AI algorithm research in restricted domains"
+  ],
+  "hardwareTags": [
+    "cpu-only"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "UK Compute Roadmap - GOV.UK",
+      "url": "https://www.gov.uk/government/publications/uk-compute-roadmap/uk-compute-roadmap"
+    }
+  ]
+}

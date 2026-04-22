@@ -1,0 +1,52 @@
+{
+  "slug": "archer2",
+  "name": "ARCHER2",
+  "category": "backbone",
+  "status": "operational",
+  "location": {
+    "institution": "EPCC",
+    "city": "Edinburgh",
+    "nation": "Scotland",
+    "itl1": "Scotland",
+    "lat": 55.9222,
+    "lon": -3.1722
+  },
+  "operator": "EPCC",
+  "funder": "EPSRC",
+  "opened": "2021-11",
+  "decommissioned": null,
+  "oneLiner": "The UK's national Tier-1 supercomputer, still central for public research while awaiting its successor.",
+  "summary": "ARCHER2 is the UK's national Tier-1 supercomputing service for academic and government-backed scientific research. It is an HPE Cray EX system delivering 28 PFLOPS peak performance across 5,860 compute nodes with dual AMD EPYC 7742 processors, plus a small GPU development platform with AMD MI210 nodes. Although primarily CPU-focused, its scale makes it valuable for data processing, simulation, and inference workflows that require very large parallel CPU capacity.",
+  "keyFacts": {
+    "hardware": "5,860 HPE Cray EX nodes with dual AMD EPYC 7742 CPUs; small AMD MI210 GPU development partition",
+    "performance": "28 PFLOPS peak",
+    "funding": "National Tier-1 service backed by EPSRC",
+    "energy": "Modern Cray EX architecture with Slingshot interconnect and shared national operations"
+  },
+  "access": {
+    "route": "Access is granted through EPSRC's ARCHER2 allocation programme for UK researchers and public-sector partners.",
+    "accessType": "public-application"
+  },
+  "useCases": [
+    "Large-scale simulation and HPC preprocessing",
+    "CPU-bound inference pipelines",
+    "Ensemble weather and scientific modelling"
+  ],
+  "hardwareTags": [
+    "cpu-only",
+    "amd-gpu"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "ARCHER2 Hardware and Software",
+      "url": "https://www.archer2.ac.uk/about/hardware.html"
+    },
+    {
+      "label": "UK Compute Roadmap - GOV.UK",
+      "url": "https://www.gov.uk/government/publications/uk-compute-roadmap/uk-compute-roadmap"
+    }
+  ]
+}

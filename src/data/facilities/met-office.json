@@ -1,0 +1,52 @@
+{
+  "slug": "met-office",
+  "name": "Met Office cloud supercomputer",
+  "category": "backbone",
+  "status": "operational",
+  "location": {
+    "institution": "Microsoft Azure (UK South) / Met Office",
+    "city": "Exeter",
+    "nation": "England",
+    "itl1": "South West",
+    "lat": 50.726,
+    "lon": -3.476
+  },
+  "operator": "Met Office / Microsoft",
+  "funder": "Met Office / UK Government",
+  "opened": "2025-01",
+  "decommissioned": null,
+  "oneLiner": "A cloud-delivered national weather supercomputer showing how AI and forecasting can scale on sovereign public infrastructure.",
+  "summary": "In 2025 the Met Office transitioned to a cloud-based supercomputer delivered as a managed service by Microsoft. The platform combines the Met Office's modelling expertise with Azure infrastructure and is described as the first managed cloud supercomputer dedicated to weather and climate science. Public disclosures cite around 1.8 million CPU cores and roughly 60 quadrillion calculations per second, making it one of the world's most powerful CPU-centric weather systems and an important complement to the UK's GPU-heavy AI platforms.",
+  "keyFacts": {
+    "hardware": "Cloud-hosted CPU supercomputer on Microsoft Azure; around 1.8 million CPU cores",
+    "performance": "Around 60 quadrillion calculations per second",
+    "funding": "National weather and climate capability investment",
+    "energy": "Powered by 100% sustainable energy according to operator reporting"
+  },
+  "access": {
+    "route": "Direct access is limited, but public-sector partners work with the Met Office on AI-enhanced weather and climate modelling.",
+    "accessType": "restricted"
+  },
+  "useCases": [
+    "Weather forecasting",
+    "Climate modelling",
+    "AI-enhanced environmental prediction"
+  ],
+  "hardwareTags": [
+    "cloud",
+    "cpu-only"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "Met Office - supercomputer overview",
+      "url": "https://www.metoffice.gov.uk/about-us/who-we-are/innovation/supercomputer"
+    },
+    {
+      "label": "Met Office - a year in the cloud",
+      "url": "https://www.metoffice.gov.uk/blog/2026/a-year-in-the-cloud-the-met-office-supercomputer"
+    }
+  ]
+}

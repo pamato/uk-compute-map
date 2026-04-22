@@ -1,0 +1,73 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import Hero from '../components/Hero.astro';
+import Methodology from '../components/Methodology.astro';
+import { MapExplorer } from '../components/MapExplorer';
+import TranslationsGrid from '../components/TranslationsGrid.astro';
+import { CountryBenchmark } from '../components/CountryBenchmark';
+import { TrajectoryChart } from '../components/TrajectoryChart';
+import { loadFacilities } from '../lib/load-facilities';
+import { TARGET_2030_EXAFLOPS } from '../lib/trajectory';
+import { execSync } from 'node:child_process';
+
+const facilities = await loadFacilities();
+const quantifiedExaflops = facilities.reduce(
+  (sum, facility) => sum + (facility.aiExaflops ?? 0),
+  0,
+);
+const operationalCount = facilities.filter(
+  (facility) => facility.status === 'operational',
+).length;
+const plannedCount = facilities.filter(
+  (facility) => facility.status === 'planned',
+).length;
+
+let lastUpdated = 'Unknown';
+
+try {
+  lastUpdated = execSync('git log -1 --format=%cs').toString().trim();
+} catch {
+  lastUpdated = 'Unknown';
+}
+
+const stats = [
+  {
+    label: 'Quantified today',
+    value: `${quantifiedExaflops}`,
+    sub: 'AI-exaflops publicly disclosed',
+  },
+  {
+    label: 'Target by 2030',
+    value: `${TARGET_2030_EXAFLOPS}`,
+    sub: 'Government roadmap ambition',
+  },
+  {
+    label: 'Mapped facilities',
+    value: `${facilities.length}`,
+    sub: `${operationalCount} operational, ${plannedCount} planned`,
+  },
+  {
+    label: 'Flagship AIRR core',
+    value: '2',
+    sub: 'Isambard-AI and Dawn',
+  },
+];
+---
+<Base title="UK Public-Sector AI Compute">
+  <Hero stats={stats} />
+
+  <MapExplorer client:load facilities={facilities} />
+
+  <section class="mx-auto max-w-6xl px-6 py-4">
+    <TrajectoryChart client:visible facilities={facilities} />
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6 py-10">
+    <CountryBenchmark client:visible />
+  </section>
+
+  <TranslationsGrid />
+  <Methodology lastUpdated={lastUpdated} />
+  <Footer />
+</Base>

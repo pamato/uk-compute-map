@@ -1,0 +1,51 @@
+{
+  "slug": "dirac-leicester",
+  "name": "DiRAC - Data-Intensive (Leicester)",
+  "category": "mission",
+  "status": "operational",
+  "location": {
+    "institution": "University of Leicester",
+    "city": "Leicester",
+    "nation": "England",
+    "itl1": "East Midlands",
+    "lat": 52.6215,
+    "lon": -1.1248
+  },
+  "operator": "DiRAC / University of Leicester",
+  "funder": "STFC",
+  "opened": "2018-01",
+  "decommissioned": null,
+  "oneLiner": "Leicester's DiRAC data-intensive service, built for big-data throughput and AI-adjacent scientific pipelines.",
+  "summary": "The Leicester DiRAC data-intensive service focuses on high-I/O, data-rich workloads for particle physics, astrophysics, and cosmology. The published programme summary cites 40,288 CPU cores, 177 TB of memory, and 7 PB of storage, emphasising strong throughput for processing very large datasets. That same profile suits AI workflows where large preprocessing jobs and storage bandwidth dominate over accelerator density.",
+  "keyFacts": {
+    "hardware": "40,288 CPU cores, 177 TB memory, and 7 PB storage",
+    "performance": "High-throughput data-intensive mission service",
+    "funding": "STFC / DiRAC national service",
+    "energy": "Purpose-built institutional data platform within DiRAC"
+  },
+  "access": {
+    "route": "Projects access the service through DiRAC's central allocation process when aligned with programme priorities.",
+    "accessType": "public-application"
+  },
+  "useCases": [
+    "Large-scale data preprocessing",
+    "Scientific inference pipelines with heavy I/O demands",
+    "Mission-specific analytics for astronomy and particle physics"
+  ],
+  "hardwareTags": [
+    "cpu-only"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "DiRAC - Our services",
+      "url": "https://dirac.ac.uk/our-services/"
+    },
+    {
+      "label": "UK Compute Roadmap - GOV.UK",
+      "url": "https://www.gov.uk/government/publications/uk-compute-roadmap/uk-compute-roadmap"
+    }
+  ]
+}

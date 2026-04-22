@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --page-noise:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.65), transparent 28%),
+    radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.5), transparent 26%),
+    linear-gradient(180deg, #f7f2e8 0%, #f4ede2 48%, #eef2ec 100%);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply font-sans antialiased;
+  background-image: var(--page-noise);
+}
+
+h1, h2, h3, h4 {
+  @apply font-serif;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  @apply bg-category-flagship text-white;
+}

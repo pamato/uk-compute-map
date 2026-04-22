@@ -1,0 +1,29 @@
+---
+import { TRANSLATIONS } from '../data/translations';
+---
+
+<section class="mx-auto max-w-6xl px-6 py-14">
+  <div class="max-w-3xl">
+    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">
+      Translating the headline number
+    </p>
+    <h2 class="mt-3 font-serif text-3xl">What 420 AI-exaflops could mean in practice</h2>
+    <p class="mt-3 text-base leading-relaxed text-stone-700">
+      The roadmap's headline target only matters if it turns into usable
+      outcomes. These examples translate abstract compute into concrete public
+      capability.
+    </p>
+  </div>
+
+  <div class="mt-8 grid gap-4 md:grid-cols-2">
+    {TRANSLATIONS.map((translation) => (
+      <article class="rounded-[2rem] border border-stone-300 bg-white p-6 shadow-[0_28px_60px_-40px_rgba(20,20,20,0.5)]">
+        <h3 class="font-serif text-2xl">{translation.title}</h3>
+        <p class="mt-4 text-sm leading-relaxed text-stone-700">{translation.body}</p>
+        <p class="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-stone-500">
+          Source: {translation.source}
+        </p>
+      </article>
+    ))}
+  </div>
+</section>

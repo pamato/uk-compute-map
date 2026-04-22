@@ -1,0 +1,51 @@
+{
+  "slug": "isambard-3",
+  "name": "Bristol Isambard 3",
+  "category": "backbone",
+  "status": "operational",
+  "location": {
+    "institution": "University of Bristol",
+    "city": "Bristol",
+    "nation": "England",
+    "itl1": "South West",
+    "lat": 51.4545,
+    "lon": -2.6017
+  },
+  "operator": "University of Bristol",
+  "funder": "GW4 / University of Bristol",
+  "opened": "2024-01",
+  "decommissioned": null,
+  "oneLiner": "A Grace CPU-based Bristol supercomputer that complements Isambard-AI with energy-efficient national-scale HPC.",
+  "summary": "Isambard 3 is a CPU-based supercomputer in Bristol that uses NVIDIA Grace CPU Superchips and is co-located with Isambard-AI. Public reporting describes it as delivering more than 55,000 cores and around six times the performance of Isambard 2. While it is not positioned as a flagship AI inference machine, it strengthens the UK's backbone compute capacity for data preparation, simulation, and CPU-heavy parts of AI workflows.",
+  "keyFacts": {
+    "hardware": "NVIDIA Grace CPU Superchips with more than 55,000 CPU cores",
+    "performance": "Around 6x Isambard 2 performance",
+    "funding": "GW4 and University of Bristol-backed research infrastructure",
+    "energy": "Designed as an energy-efficient successor in the Isambard line"
+  },
+  "access": {
+    "route": "Access is offered through Bristol and partner research allocations, complementing the AIRR's Bristol footprint.",
+    "accessType": "public-application"
+  },
+  "useCases": [
+    "CPU-heavy preprocessing for AI workflows",
+    "Energy-efficient scientific computing",
+    "General research HPC alongside Isambard-AI"
+  ],
+  "hardwareTags": [
+    "cpu-only"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "University of Bristol - Isambard 3 goes online",
+      "url": "https://www.bristol.ac.uk/cabot/news/2024/isambard.html"
+    },
+    {
+      "label": "UK Compute Roadmap - GOV.UK",
+      "url": "https://www.gov.uk/government/publications/uk-compute-roadmap/uk-compute-roadmap"
+    }
+  ]
+}

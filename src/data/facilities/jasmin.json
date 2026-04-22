@@ -1,0 +1,52 @@
+{
+  "slug": "jasmin",
+  "name": "JASMIN",
+  "category": "specialist",
+  "status": "upgrading",
+  "location": {
+    "institution": "NERC / CEDA",
+    "city": "RAL Harwell",
+    "nation": "England",
+    "itl1": "South East",
+    "lat": 51.5719,
+    "lon": -1.3133
+  },
+  "operator": "Centre for Environmental Data Analysis",
+  "funder": "NERC",
+  "opened": "2012-01",
+  "decommissioned": null,
+  "oneLiner": "The UK's environmental data-analysis platform, now adding high-memory and GPU-MIG capacity for machine learning.",
+  "summary": "JASMIN is a specialised environmental-science data analysis facility that combines very large storage with interactive, batch, and cloud compute services. In 2026 it added high-memory nodes with 6 TB RAM and 192 CPU cores each, alongside a GPU partition that uses NVIDIA Multi-Instance GPU technology to support machine-learning workloads more efficiently. The platform is especially important for AI inference on environmental and earth-observation datasets where storage, memory, and data locality matter as much as raw accelerator count.",
+  "keyFacts": {
+    "hardware": "Petabyte-scale storage, new 6 TB high-memory nodes, and a GPU-MIG partition for ML workloads",
+    "performance": "Optimised for high-memory analytics and flexible GPU slicing rather than a single headline FLOPS figure",
+    "funding": "NERC-supported national data service",
+    "energy": "Shared national platform focused on efficient resource partitioning"
+  },
+  "access": {
+    "route": "NERC scientists access JASMIN free of charge; other users can apply on a cost-recovery basis.",
+    "accessType": "commercial"
+  },
+  "useCases": [
+    "Earth-observation model inference",
+    "Environmental risk analysis",
+    "Petabyte-scale preprocessing for machine learning"
+  ],
+  "hardwareTags": [
+    "nvidia-gpu",
+    "cpu-only"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "NERC Environmental Data Service - JASMIN",
+      "url": "https://eds.ukri.org/services/jasmin"
+    },
+    {
+      "label": "CEDA - JASMIN updates March 2026",
+      "url": "https://www.ceda.ac.uk/news/updates/2026/2026-03-11-jasmin-update-march-2026/"
+    }
+  ]
+}

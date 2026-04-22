@@ -1,0 +1,51 @@
+---
+const { lastUpdated } = Astro.props as { lastUpdated: string };
+---
+
+<section class="mx-auto max-w-6xl px-6 py-14">
+  <details class="group rounded-[2rem] border border-stone-300 bg-white p-6 shadow-[0_28px_60px_-40px_rgba(20,20,20,0.5)]">
+    <summary class="cursor-pointer list-none">
+      <div class="flex items-center justify-between gap-4">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">
+            Methodology
+          </p>
+          <h2 class="mt-2 font-serif text-3xl">How the map was assembled</h2>
+        </div>
+        <span class="rounded-full border border-stone-300 px-3 py-1 text-sm text-stone-600">
+          Expand
+        </span>
+      </div>
+    </summary>
+
+    <div class="mt-6 space-y-4 text-sm leading-relaxed text-stone-700">
+      <p>
+        Facilities are included when they are publicly funded, publicly
+        accessible, or strategically important to the UK public compute
+        ecosystem. The primary source is the local research PDF and the operator
+        links cited inside it.
+      </p>
+      <p>
+        The map uses institution-level coordinates rather than precise machine
+        room locations. Where multiple facilities sit at the same host site, the
+        explorer clusters them into a single point and cycles through them on
+        repeated selection.
+      </p>
+      <p>
+        The trajectory chart only counts facilities with a published
+        AI-exaflops figure. This intentionally excludes CPU-first systems and
+        sites without disclosed AI-exaflops, because combining them into a single
+        quantified curve would imply a comparability the source material does not
+        support.
+      </p>
+      <p>
+        The country comparison is a hand-curated order-of-magnitude benchmark
+        for public-access AI compute. It is useful for orientation, not for
+        precise geopolitical scoring.
+      </p>
+      <p class="text-xs font-semibold uppercase tracking-[0.16em] text-stone-500">
+        Last updated: {lastUpdated}
+      </p>
+    </div>
+  </details>
+</section>

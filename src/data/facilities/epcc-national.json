@@ -1,0 +1,57 @@
+{
+  "slug": "epcc-national",
+  "name": "Planned National Supercomputer",
+  "category": "flagship",
+  "status": "planned",
+  "location": {
+    "institution": "EPCC",
+    "city": "Edinburgh",
+    "nation": "Scotland",
+    "itl1": "Scotland",
+    "lat": 55.9222,
+    "lon": -3.1722
+  },
+  "operator": "EPCC / National Supercomputing Centre",
+  "funder": "UK Government",
+  "opened": "2027-01",
+  "decommissioned": null,
+  "oneLiner": "The UK's planned £750 million successor to ARCHER2 and anchor of a new national supercomputing network.",
+  "summary": "The UK Government is investing up to £750 million in a new national supercomputer at EPCC in Edinburgh. The machine is due online in 2027 and is intended to replace ARCHER2 while supporting AI research across climate, medicine, and national security. Public descriptions say it will provide exascale performance through a mix of CPU, GPU, and other accelerator technologies, improve energy efficiency, and help anchor a network of national supercomputing centres.",
+  "keyFacts": {
+    "hardware": "Exascale-class national system with CPU, GPU, and accelerator mix; detailed architecture not yet public",
+    "performance": "Designed to rank among the world's top systems at launch",
+    "funding": "Up to £750 million",
+    "energy": "National roadmap prioritises energy efficiency and supplier diversity"
+  },
+  "access": {
+    "route": "Expected to succeed ARCHER2 as the UK's top national supercomputing service for academic and public-sector research.",
+    "accessType": "public-application"
+  },
+  "useCases": [
+    "AI-enabled climate research",
+    "Medical and life-science modelling",
+    "National-security and strategic simulation"
+  ],
+  "hardwareTags": [
+    "nvidia-gpu",
+    "amd-gpu",
+    "cpu-only"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "UK Compute Roadmap - GOV.UK",
+      "url": "https://www.gov.uk/government/publications/uk-compute-roadmap/uk-compute-roadmap"
+    },
+    {
+      "label": "Data-Driven Innovation - national supercomputer announcement",
+      "url": "https://ddi.ac.uk/university-set-to-host-750m-national-supercomputer/"
+    },
+    {
+      "label": "University of Edinburgh - National Supercomputing Centre",
+      "url": "https://www.ed.ac.uk/news/university-named-uks-first-national-supercomputing-centre"
+    }
+  ]
+}

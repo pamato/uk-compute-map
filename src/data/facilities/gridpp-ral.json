@@ -1,0 +1,51 @@
+{
+  "slug": "gridpp-ral",
+  "name": "GridPP Tier-1 (RAL)",
+  "category": "mission",
+  "status": "operational",
+  "location": {
+    "institution": "STFC Rutherford Appleton Lab",
+    "city": "Harwell",
+    "nation": "England",
+    "itl1": "South East",
+    "lat": 51.5719,
+    "lon": -1.3133
+  },
+  "operator": "GridPP / STFC",
+  "funder": "STFC / GridPP",
+  "opened": "2001-01",
+  "decommissioned": null,
+  "oneLiner": "The UK's Tier-1 LHC computing centre, offering secure large-scale CPU and storage capacity for mission workloads.",
+  "summary": "GridPP is the UK's contribution to the Worldwide LHC Computing Grid and aggregates computing across national labs and universities. The Tier-1 centre at Rutherford Appleton Laboratory provides advanced processors, secure operations, extensive storage, and high-speed networking for particle physics data processing. For AI inference it is most relevant as a mission-grade platform for embarrassingly parallel workloads, data staging, and large-scale CPU processing rather than dense accelerator-based model serving.",
+  "keyFacts": {
+    "hardware": "Tier-1 CPU and storage infrastructure at RAL, plus a wider distributed GridPP network",
+    "performance": "Thousands of CPU cores and petabytes of storage available for large parallel data workflows",
+    "funding": "STFC-backed national science infrastructure",
+    "energy": "Operated as a mission-critical research service with secure data centre practices"
+  },
+  "access": {
+    "route": "Access is organised through GridPP and STFC; up to 10% of resources can be made available to new communities, including industry.",
+    "accessType": "restricted"
+  },
+  "useCases": [
+    "Massively parallel data processing",
+    "AI workflow preprocessing and staging",
+    "Mission-specific scientific computing"
+  ],
+  "hardwareTags": [
+    "cpu-only"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "GridPP - for industry",
+      "url": "https://www.gridpp.ac.uk/users/industry/"
+    },
+    {
+      "label": "GridPP - UK Tier-1 Centre",
+      "url": "https://www.gridpp.ac.uk/infrastructure/the-uk-tier-1-centre/"
+    }
+  ]
+}

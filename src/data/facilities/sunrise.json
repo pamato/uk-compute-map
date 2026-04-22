@@ -1,0 +1,51 @@
+{
+  "slug": "sunrise",
+  "name": "Sunrise",
+  "category": "flagship",
+  "status": "planned",
+  "location": {
+    "institution": "University of Cambridge / UKAEA",
+    "city": "Cambridge",
+    "nation": "England",
+    "itl1": "East of England",
+    "lat": 52.2053,
+    "lon": 0.1218
+  },
+  "operator": "University of Cambridge / UKAEA / Dell / AMD / StackHPC",
+  "funder": "DESNZ",
+  "opened": null,
+  "decommissioned": null,
+  "oneLiner": "A planned £45 million AI supercomputer dedicated to fusion power research and national capability.",
+  "summary": "Sunrise was announced in 2026 as a £45 million AI supercomputer dedicated to accelerating fusion-energy research. Co-designed by Cambridge Research Computing, UKAEA, Dell, AMD, and StackHPC, it is intended to support fusion plasma modelling and materials science. The project is described as a 1.4 MW GPU-accelerated system that will become one of the UK's largest AI supercomputers and the world's largest dedicated to fusion power, though detailed hardware specifications have not yet been published.",
+  "keyFacts": {
+    "hardware": "1.4 MW GPU-accelerated system; detailed node specifications not yet public",
+    "performance": "Large-scale national AI service for fusion science; exact AI-exaflops not published",
+    "funding": "£45 million",
+    "energy": "Designed as a dedicated fusion-research AI platform within the UK's national compute expansion"
+  },
+  "access": {
+    "route": "Planned to integrate into the national AI ecosystem for public-sector fusion, plasma, and materials research.",
+    "accessType": "public-application"
+  },
+  "useCases": [
+    "Fusion plasma modelling",
+    "Materials discovery for fusion systems",
+    "Fuel-breeding and reactor design simulation"
+  ],
+  "hardwareTags": [
+    "amd-gpu"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "University of Cambridge - Sunrise announcement",
+      "url": "https://www.cam.ac.uk/news/ps45-million-for-the-uks-first-ai-supercomputer-dedicated-to-fusion-power"
+    },
+    {
+      "label": "UK Compute Roadmap - GOV.UK",
+      "url": "https://www.gov.uk/government/publications/uk-compute-roadmap/uk-compute-roadmap"
+    }
+  ]
+}

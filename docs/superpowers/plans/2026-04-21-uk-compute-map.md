@@ -134,7 +134,7 @@ ai_compute/
 - Create: `.gitignore`
 - Create: `README.md`
 
-- [ ] **Step 1: Initialise git and npm**
+- [x] **Step 1: Initialise git and npm**
 
 Run:
 ```bash
@@ -145,7 +145,7 @@ npm init -y
 
 Expected: creates `.git/` and `package.json`.
 
-- [ ] **Step 2: Install core dependencies**
+- [x] **Step 2: Install core dependencies**
 
 Run:
 ```bash
@@ -155,7 +155,7 @@ npm install -D @types/react @types/react-dom vitest @vitest/ui playwright @playw
 
 Expected: installs packages, populates `package-lock.json`.
 
-- [ ] **Step 3: Write `astro.config.mjs`**
+- [x] **Step 3: Write `astro.config.mjs`**
 
 ```js
 import { defineConfig } from 'astro/config';
@@ -169,7 +169,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 4: Write `tsconfig.json`**
+- [x] **Step 4: Write `tsconfig.json`**
 
 ```json
 {
@@ -184,7 +184,7 @@ export default defineConfig({
 }
 ```
 
-- [ ] **Step 5: Write `tailwind.config.mjs` with category palette**
+- [x] **Step 5: Write `tailwind.config.mjs` with category palette**
 
 ```js
 /** @type {import('tailwindcss').Config} */
@@ -219,7 +219,7 @@ export default {
 };
 ```
 
-- [ ] **Step 6: Write `src/styles/global.css`**
+- [x] **Step 6: Write `src/styles/global.css`**
 
 ```css
 @tailwind base;
@@ -239,10 +239,12 @@ h1, h2, h3, h4 {
 }
 ```
 
-- [ ] **Step 7: Write `src/layouts/Base.astro`**
+- [x] **Step 7: Write `src/layouts/Base.astro`**
 
 ```astro
 ---
+import '../styles/global.css';
+
 interface Props { title: string; description?: string; }
 const { title, description = "UK public-sector AI compute infrastructure map." } = Astro.props;
 ---
@@ -254,7 +256,6 @@ const { title, description = "UK public-sector AI compute infrastructure map." }
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/src/styles/global.css" />
   </head>
   <body>
     <slot />
@@ -262,7 +263,7 @@ const { title, description = "UK public-sector AI compute infrastructure map." }
 </html>
 ```
 
-- [ ] **Step 8: Write minimal `src/pages/index.astro`**
+- [x] **Step 8: Write minimal `src/pages/index.astro`**
 
 ```astro
 ---
@@ -276,7 +277,7 @@ import Base from '../layouts/Base.astro';
 </Base>
 ```
 
-- [ ] **Step 9: Write `.gitignore`**
+- [x] **Step 9: Write `.gitignore`**
 
 ```
 node_modules
@@ -290,7 +291,7 @@ playwright-report
 test-results
 ```
 
-- [ ] **Step 10: Add npm scripts to `package.json`**
+- [x] **Step 10: Add npm scripts to `package.json`**
 
 Edit `package.json` `"scripts"` to:
 ```json
@@ -304,7 +305,7 @@ Edit `package.json` `"scripts"` to:
 }
 ```
 
-- [ ] **Step 11: Verify the scaffold builds**
+- [x] **Step 11: Verify the scaffold builds**
 
 Run:
 ```bash
@@ -313,7 +314,7 @@ npm run build
 
 Expected: build succeeds; `dist/index.html` exists.
 
-- [ ] **Step 12: Commit**
+- [x] **Step 12: Commit**
 
 ```bash
 git add -A
@@ -329,7 +330,7 @@ git commit -m "chore: scaffold Astro + React + Tailwind project"
 - Test:   `tests/unit/schema.test.ts`
 - Create: `vitest.config.ts`
 
-- [ ] **Step 1: Write `vitest.config.ts`**
+- [x] **Step 1: Write `vitest.config.ts`**
 
 ```ts
 import { defineConfig } from 'vitest/config';
@@ -345,7 +346,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 2: Write the failing test `tests/unit/schema.test.ts`**
+- [x] **Step 2: Write the failing test `tests/unit/schema.test.ts`**
 
 ```ts
 import { describe, it, expect } from 'vitest';
@@ -425,12 +426,12 @@ describe('FacilitySchema', () => {
 });
 ```
 
-- [ ] **Step 3: Run test to verify it fails**
+- [x] **Step 3: Run test to verify it fails**
 
 Run: `npx vitest run tests/unit/schema.test.ts`
 Expected: FAIL — "Cannot find module '../../src/data/schema'".
 
-- [ ] **Step 4: Implement `src/data/schema.ts`**
+- [x] **Step 4: Implement `src/data/schema.ts`**
 
 ```ts
 import { z } from 'zod';
@@ -516,12 +517,12 @@ export type AccessType = z.infer<typeof AccessTypeSchema>;
 export type HardwareTag = z.infer<typeof HardwareTagSchema>;
 ```
 
-- [ ] **Step 5: Run test to verify it passes**
+- [x] **Step 5: Run test to verify it passes**
 
 Run: `npx vitest run tests/unit/schema.test.ts`
 Expected: all 7 tests PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/data/schema.ts tests/unit/schema.test.ts vitest.config.ts
@@ -538,7 +539,7 @@ git commit -m "feat(data): add Facility Zod schema with full validation"
 - Create: `src/data/facilities/isambard-ai.json` (seed: one facility so the loader has something to read)
 - Test:   `tests/unit/load-facilities.test.ts` (indirect coverage via schema tests; here we test the loader directly using a tmp dir)
 
-- [ ] **Step 1: Create the seed facility JSON `src/data/facilities/isambard-ai.json`**
+- [x] **Step 1: Create the seed facility JSON `src/data/facilities/isambard-ai.json`**
 
 ```json
 {
@@ -587,7 +588,7 @@ git commit -m "feat(data): add Facility Zod schema with full validation"
 }
 ```
 
-- [ ] **Step 2: Write the failing test `tests/unit/load-facilities.test.ts`**
+- [x] **Step 2: Write the failing test `tests/unit/load-facilities.test.ts`**
 
 ```ts
 import { describe, it, expect } from 'vitest';
@@ -610,12 +611,12 @@ describe('loadFacilities', () => {
 });
 ```
 
-- [ ] **Step 3: Run test to verify it fails**
+- [x] **Step 3: Run test to verify it fails**
 
 Run: `npx vitest run tests/unit/load-facilities.test.ts`
 Expected: FAIL — "Cannot find module '../../src/lib/load-facilities'".
 
-- [ ] **Step 4: Implement `src/lib/load-facilities.ts`**
+- [x] **Step 4: Implement `src/lib/load-facilities.ts`**
 
 ```ts
 import { readdir, readFile } from 'node:fs/promises';
@@ -652,46 +653,41 @@ export async function loadFacilities(): Promise<Facility[]> {
 }
 ```
 
-- [ ] **Step 5: Run test to verify it passes**
+- [x] **Step 5: Run test to verify it passes**
 
 Run: `npx vitest run tests/unit/load-facilities.test.ts`
 Expected: 2 tests PASS.
 
-- [ ] **Step 6: Write `scripts/validate-data.ts`**
+- [x] **Step 6: Write `scripts/validate-data.ts`**
 
 ```ts
-import { loadFacilities } from '../src/lib/load-facilities';
+import { loadFacilities } from '../src/lib/load-facilities.ts';
 
 async function main() {
   const facilities = await loadFacilities();
-  console.log(`✔ Validated ${facilities.length} facilities.`);
+  console.log(`Validated ${facilities.length} facilities.`);
 }
 
 main().catch(err => {
-  console.error('✘ Data validation failed:\n', err);
+  console.error('Data validation failed.\n', err);
   process.exit(1);
 });
 ```
 
-- [ ] **Step 7: Add `validate` script to `package.json`**
+- [x] **Step 7: Add `validate` script to `package.json`**
 
 ```json
 "scripts": {
-  "validate": "tsx scripts/validate-data.ts"
+  "validate": "node --experimental-strip-types scripts/validate-data.ts"
 }
 ```
 
-Install tsx:
-```bash
-npm install -D tsx
-```
-
-- [ ] **Step 8: Run validator**
+- [x] **Step 8: Run validator**
 
 Run: `npm run validate`
-Expected: `✔ Validated 1 facilities.`
+Expected: `Validated 1 facilities.`
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add -A
