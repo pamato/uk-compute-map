@@ -59,24 +59,7 @@ export function MapView({
   const featureCollection = useMemo(
     () => ({
       type: 'FeatureCollection' as const,
-      features: facilities.map((facility) => ({
-        type: 'Feature' as const,
-        geometry: {
-          type: 'Point' as const,
-          coordinates: [facility.location.lon, facility.location.lat] as [
-            number,
-            number,
-          ],
-        },
-        properties: {
-          slug: facility.slug,
-          name: facility.name,
-          shortLabel: shortLabelFor(facility),
-          category: facility.category,
-          status: facility.status,
-          countLabel: '1 infra',
-        },
-      })),
+      features: buildSiteFeatures(facilities),
     }),
     [facilities],
   );
@@ -122,26 +105,34 @@ export function MapView({
     map.keyboard.disableRotation();
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
 
-    map.on('load', () => {
-      map.addSource('facilities', {
-        type: 'geojson',
+      map.on('load', () => {
+        map.addSource('facilities', {
+          type: 'geojson',
         data: {
           type: 'FeatureCollection',
           features: [],
         },
-        cluster: true,
-        clusterRadius: 42,
-        clusterMaxZoom: 7,
+        cluster: false,
       });
 
       map.addLayer({
-        id: 'facility-clusters',
+        id: 'grouped-sites',
         type: 'circle',
         source: 'facilities',
-        filter: ['has', 'point_count'],
+        filter: ['>', ['get', 'groupSize'], 1],
         paint: {
           'circle-color': '#f8f4ea',
-          'circle-radius': ['step', ['get', 'point_count'], 12, 3, 16, 6, 20],
+          'circle-radius': [
+            'interpolate',
+            ['linear'],
+            ['get', 'groupSize'],
+            2,
+            14,
+            4,
+            18,
+            6,
+            21,
+          ],
           'circle-stroke-color': '#ffffff',
           'circle-stroke-width': 3,
           'circle-opacity': 0.98,
@@ -149,24 +140,34 @@ export function MapView({
       });
 
       map.addLayer({
-        id: 'facility-cluster-halo',
+        id: 'grouped-sites-halo',
         type: 'circle',
         source: 'facilities',
-        filter: ['has', 'point_count'],
+        filter: ['>', ['get', 'groupSize'], 1],
         paint: {
           'circle-color': '#000000',
-          'circle-radius': ['step', ['get', 'point_count'], 14, 3, 18, 6, 22],
+          'circle-radius': [
+            'interpolate',
+            ['linear'],
+            ['get', 'groupSize'],
+            2,
+            16,
+            4,
+            20,
+            6,
+            23,
+          ],
           'circle-opacity': 0.08,
         },
       });
 
       map.addLayer({
-        id: 'facility-cluster-count',
+        id: 'grouped-sites-count',
         type: 'symbol',
         source: 'facilities',
-        filter: ['has', 'point_count'],
+        filter: ['>', ['get', 'groupSize'], 1],
         layout: {
-          'text-field': ['concat', ['to-string', ['get', 'point_count']], ' infra'],
+          'text-field': ['to-string', ['get', 'groupSize']],
           'text-size': 12,
           'text-font': ['Noto Sans Regular'],
           'text-offset': [0, 0],
@@ -180,7 +181,7 @@ export function MapView({
         id: 'facility-points',
         type: 'circle',
         source: 'facilities',
-        filter: ['!', ['has', 'point_count']],
+        filter: ['==', ['get', 'groupSize'], 1],
         paint: {
           'circle-color': [
             'match',
@@ -197,7 +198,7 @@ export function MapView({
             CATEGORY_COLOR.mission,
             '#1f4e79',
           ],
-          'circle-radius': 7,
+          'circle-radius': 7.5,
           'circle-stroke-color': '#ffffff',
           'circle-stroke-width': 3,
           'circle-opacity': [
@@ -213,6 +214,25 @@ export function MapView({
             STATUS_OPACITY.decommissioned,
             1,
           ],
+        },
+      });
+
+      map.addLayer({
+        id: 'facility-point-labels',
+        type: 'symbol',
+        source: 'facilities',
+        filter: ['all', ['==', ['get', 'groupSize'], 1], ['>=', ['zoom'], 6.2]],
+        layout: {
+          'text-field': ['get', 'shortLabel'],
+          'text-font': ['Noto Sans Regular'],
+          'text-size': 11,
+          'text-offset': [0, 1.25],
+          'text-anchor': 'top',
+        },
+        paint: {
+          'text-color': '#3f3a34',
+          'text-halo-color': 'rgba(255,255,255,0.92)',
+          'text-halo-width': 1.8,
         },
       });
 
@@ -235,10 +255,10 @@ export function MapView({
       map.on('mouseleave', 'facility-points', () => {
         map.getCanvas().style.cursor = '';
       });
-      map.on('mouseenter', 'facility-clusters', () => {
+      map.on('mouseenter', 'grouped-sites', () => {
         map.getCanvas().style.cursor = 'pointer';
       });
-      map.on('mouseleave', 'facility-clusters', () => {
+      map.on('mouseleave', 'grouped-sites', () => {
         map.getCanvas().style.cursor = '';
       });
 
@@ -251,21 +271,22 @@ export function MapView({
         }
       });
 
-      map.on('click', 'facility-clusters', async (event) => {
+      map.on('click', 'grouped-sites', (event) => {
         const feature = event.features?.[0];
         if (!feature) return;
-
-        const source = map.getSource('facilities') as maplibregl.GeoJSONSource;
-        const clusterId = Number(feature.properties?.cluster_id);
-        const zoom = await source.getClusterExpansionZoom(clusterId);
+        const slugList = feature.properties?.slugList;
+        if (typeof slugList !== 'string') return;
+        const [firstSlug] = slugList.split('|');
+        if (!firstSlug) return;
         const coordinates = feature.geometry.type === 'Point'
           ? (feature.geometry.coordinates as [number, number])
           : MAP_CENTRE;
         map.easeTo({
           center: coordinates,
-          zoom: Math.max(zoom ?? INITIAL_ZOOM + 1, INITIAL_ZOOM + 1),
+          zoom: Math.max(map.getZoom(), 7.1),
           duration: 600,
         });
+        onSelect(firstSlug);
       });
     });
 
@@ -402,4 +423,39 @@ function shortLabelFor(facility: Facility) {
   };
 
   return labelBySlug[facility.slug] ?? facility.name;
+}
+
+function buildSiteFeatures(facilities: Facility[]) {
+  const grouped = new Map<string, Facility[]>();
+
+  for (const facility of facilities) {
+    const key = `${facility.location.lat}:${facility.location.lon}`;
+    const existing = grouped.get(key) ?? [];
+    existing.push(facility);
+    grouped.set(key, existing);
+  }
+
+  return Array.from(grouped.values()).map((group) => {
+    const primary = group[0];
+
+    return {
+      type: 'Feature' as const,
+      geometry: {
+        type: 'Point' as const,
+        coordinates: [primary.location.lon, primary.location.lat] as [
+          number,
+          number,
+        ],
+      },
+      properties: {
+        slug: primary.slug,
+        slugList: group.map((facility) => facility.slug).join('|'),
+        name: primary.name,
+        shortLabel: shortLabelFor(primary),
+        category: primary.category,
+        status: primary.status,
+        groupSize: group.length,
+      },
+    };
+  });
 }

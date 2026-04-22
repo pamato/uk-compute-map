@@ -9,9 +9,16 @@ import { StatusBadge } from './StatusBadge';
 export interface DetailPanelProps {
   facility: Facility | null;
   onClose: () => void;
+  onSelectFacility: (slug: string) => void;
+  relatedFacilities: Facility[];
 }
 
-export function DetailPanel({ facility, onClose }: DetailPanelProps) {
+export function DetailPanel({
+  facility,
+  onClose,
+  onSelectFacility,
+  relatedFacilities,
+}: DetailPanelProps) {
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
@@ -54,6 +61,34 @@ export function DetailPanel({ facility, onClose }: DetailPanelProps) {
         className="h-full w-full max-w-xl overflow-y-auto border-l border-stone-300 bg-white px-6 py-8 shadow-2xl"
         role="dialog"
       >
+        {relatedFacilities.length > 1 ? (
+          <section className="mb-5 border-b border-stone-200 pb-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">
+              Also at this site
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {relatedFacilities.map((candidate) => {
+                const active = candidate.slug === facility.slug;
+                return (
+                  <button
+                    aria-pressed={active}
+                    className={`rounded-full border px-3 py-1.5 text-sm transition ${
+                      active
+                        ? 'border-ink bg-ink text-white'
+                        : 'border-stone-300 bg-white text-stone-700 hover:border-stone-500 hover:text-ink'
+                    }`}
+                    key={candidate.slug}
+                    onClick={() => onSelectFacility(candidate.slug)}
+                    type="button"
+                  >
+                    {siteTabLabel(candidate)}
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+        ) : null}
+
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">
@@ -153,4 +188,15 @@ function Fact({ label, value }: { label: string; value: string }) {
       <dd className="mt-1 text-sm leading-relaxed text-stone-800">{value}</dd>
     </div>
   );
+}
+
+function siteTabLabel(facility: Facility) {
+  const labels: Record<string, string> = {
+    'dirac-durham': 'DiRAC Durham',
+    'dirac-csd3': 'DiRAC CSD3',
+    'dirac-leicester': 'DiRAC Leicester',
+    'dirac-tursa': 'DiRAC Tursa',
+  };
+
+  return labels[facility.slug] ?? facility.name;
 }
