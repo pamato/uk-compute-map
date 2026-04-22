@@ -10,6 +10,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "validate": "node --experimental-strip-types scripts/validate-data.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test"

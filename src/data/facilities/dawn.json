@@ -1,0 +1,56 @@
+{
+  "slug": "dawn",
+  "name": "Cambridge Dawn",
+  "category": "flagship",
+  "status": "upgrading",
+  "location": {
+    "institution": "Cambridge Open Zettascale Lab",
+    "city": "Cambridge",
+    "nation": "England",
+    "itl1": "East of England",
+    "lat": 52.2053,
+    "lon": 0.1218
+  },
+  "operator": "University of Cambridge / Dell / Intel",
+  "funder": "UKRI / DSIT",
+  "opened": "2024-11",
+  "decommissioned": null,
+  "oneLiner": "The UK's fastest AI supercomputer and the other half of the AIRR, now expanding six-fold.",
+  "summary": "Dawn is the UK's fastest AI supercomputer and, with Isambard-AI, forms the AI Research Resource. Government funding is expanding its capacity six-fold by spring 2026. The system comprises 256 Dell PowerEdge XE9640 servers, each with two Intel Xeon Platinum 8468 processors, 1 TiB of RAM, and four Intel Data Center GPU Max 1550 GPUs linked by Xe-Link and HDR200 InfiniBand. A near-term upgrade adds AMD MI355X GPUs with StackHPC software to diversify the national AI compute supply chain.",
+  "keyFacts": {
+    "hardware": "256 Dell PowerEdge XE9640 nodes with Intel Xeon Platinum 8468 CPUs and Intel GPU Max 1550 GPUs; AMD MI355X upgrade planned",
+    "performance": "Around 1 AI-exaflop",
+    "funding": "£36 million expansion",
+    "energy": "Run within Cambridge Research Computing's managed, federated operations model"
+  },
+  "access": {
+    "route": "Free access via AIRR allocations, with project administration through the Cambridge Research Computing Portal.",
+    "accessType": "public-application"
+  },
+  "useCases": [
+    "Seasonal sea-ice forecasting with IceNet",
+    "Kidney-cancer screening model training",
+    "Large language model inference with high-bandwidth memory GPUs"
+  ],
+  "hardwareTags": [
+    "intel-gpu",
+    "amd-gpu"
+  ],
+  "aiExaflops": 1,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "GOV.UK - Cambridge supercomputer expansion announcement",
+      "url": "https://www.gov.uk/government/news/cambridge-supercomputer-set-to-get-6-times-more-powerful-as-government-backs-british-ai-innovation"
+    },
+    {
+      "label": "CSD3 documentation - Dawn Intel GPU nodes",
+      "url": "https://docs.hpc.cam.ac.uk/user-guide/pvc.html"
+    },
+    {
+      "label": "Cambridge Research Computing - Dawn",
+      "url": "https://www.hpc.cam.ac.uk/d-w-n"
+    }
+  ]
+}

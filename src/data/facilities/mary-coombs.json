@@ -1,0 +1,51 @@
+{
+  "slug": "mary-coombs",
+  "name": "Mary Coombs",
+  "category": "backbone",
+  "status": "operational",
+  "location": {
+    "institution": "Hartree Centre",
+    "city": "Daresbury",
+    "nation": "England",
+    "itl1": "North West",
+    "lat": 53.3439,
+    "lon": -2.6396
+  },
+  "operator": "STFC Hartree Centre",
+  "funder": "STFC",
+  "opened": "2025-10",
+  "decommissioned": null,
+  "oneLiner": "Hartree's new H100 system for industry and public-sector AI, delivering 10x the performance of its predecessor.",
+  "summary": "Mary Coombs launched in October 2025 at the STFC Hartree Centre, replacing Scafell Pike as the centre's flagship AI and data-science platform. The system combines 157 compute nodes powered by NVIDIA H100 GPUs into a 24.41 PFLOP GPU-based supercomputer delivered through a platform-as-a-service model. Hartree positions it as a flexible system for industry, academia, and public-sector organisations that need GPU capacity and applied expertise in AI optimisation and visualisation.",
+  "keyFacts": {
+    "hardware": "157 compute nodes powered by NVIDIA H100 GPUs",
+    "performance": "24.41 PFLOPS; around 10x Scafell Pike performance",
+    "funding": "STFC Hartree Centre investment",
+    "energy": "Uses 75% less energy than its predecessor"
+  },
+  "access": {
+    "route": "Available as a managed platform-as-a-service for industry, academia, and public-sector organisations through the Hartree Centre.",
+    "accessType": "commercial"
+  },
+  "useCases": [
+    "Applied AI prototyping",
+    "Public-sector data science workloads",
+    "GPU-accelerated model training and inference"
+  ],
+  "hardwareTags": [
+    "nvidia-gpu"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "Hartree Centre - Mary Coombs",
+      "url": "https://www.hartree.stfc.ac.uk/technologies/mary-coombs/"
+    },
+    {
+      "label": "Hartree Centre - launch announcement",
+      "url": "https://www.hartree.stfc.ac.uk/news/2025/10/20/stfc-launches-powerful-new-ai-supercomputer-for-industry/"
+    }
+  ]
+}

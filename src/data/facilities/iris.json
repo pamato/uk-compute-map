@@ -1,0 +1,58 @@
+{
+  "slug": "iris",
+  "name": "IRIS federated infrastructure",
+  "category": "specialist",
+  "status": "operational",
+  "location": {
+    "institution": "STFC (coordinating)",
+    "city": "Rutherford Appleton Lab",
+    "nation": "England",
+    "itl1": "South East",
+    "lat": 51.5719,
+    "lon": -1.3133
+  },
+  "operator": "STFC and partner institutions",
+  "funder": "STFC",
+  "opened": "2018-01",
+  "decommissioned": null,
+  "oneLiner": "A federated digital research infrastructure that links clouds, clusters, storage, and identity across UK science sites.",
+  "summary": "IRIS is a community-led federation that coordinates digital research infrastructure across STFC laboratories and university partners. It combines the STFC Cloud, Arcus at Cambridge, Imperial College Cloud, and the Somerville Cloud in Edinburgh with HPC clusters, grid computing, tape archives, and object storage. Rather than being a single machine, IRIS matters for AI inference because it offers federated identity, shared allocation processes, and heterogeneous compute for projects that need secure data handling or geographically distributed access.",
+  "keyFacts": {
+    "hardware": "Federation of clouds, clusters, grid resources, tape archives, and S3-compatible object storage",
+    "performance": "Heterogeneous CPU and GPU capacity across partner services",
+    "funding": "STFC-coordinated national research infrastructure",
+    "energy": "Includes IRIS-CAST carbon-footprint tracking across federated services"
+  },
+  "access": {
+    "route": "Resources are allocated through IRIS's Resource Scrutiny and Allocation Process with federated identity across partners.",
+    "accessType": "federated"
+  },
+  "useCases": [
+    "Secure multi-institution AI inference",
+    "Federated scientific data processing",
+    "Workflows that combine compute, object storage, and tape archives"
+  ],
+  "hardwareTags": [
+    "cloud",
+    "nvidia-gpu",
+    "cpu-only"
+  ],
+  "aiExaflops": null,
+  "federationMembers": [
+    "STFC Cloud",
+    "Arcus (Cambridge)",
+    "Imperial College Cloud",
+    "Somerville Cloud (Edinburgh)"
+  ],
+  "image": null,
+  "sources": [
+    {
+      "label": "IRIS booklet",
+      "url": "https://www.sc.stfc.ac.uk/wp-content/uploads/2025/03/IRISbookletFinal.pdf"
+    },
+    {
+      "label": "UK Compute Roadmap - GOV.UK",
+      "url": "https://www.gov.uk/government/publications/uk-compute-roadmap/uk-compute-roadmap"
+    }
+  ]
+}

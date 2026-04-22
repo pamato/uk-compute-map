@@ -1,0 +1,52 @@
+{
+  "slug": "young-mmm",
+  "name": "Young / MMM Hub",
+  "category": "regional",
+  "status": "operational",
+  "location": {
+    "institution": "Young facility",
+    "city": "London",
+    "nation": "England",
+    "itl1": "London",
+    "lat": 51.5246,
+    "lon": -0.134
+  },
+  "operator": "Materials and Molecular Modelling Hub",
+  "funder": "MMM Hub partners / EPSRC",
+  "opened": "2020-01",
+  "decommissioned": null,
+  "oneLiner": "A materials-science supercomputer with an A100 partition that doubles as a capable research inference platform.",
+  "summary": "The Young supercomputer supports materials and molecular modelling for the MMM Hub. Its design mixes 23,040 CPU cores with a smaller accelerated partition of six nodes, each carrying eight NVIDIA A100 GPUs and dual AMD EPYC 7543 CPUs. Although its main mission is chemistry and materials science, the A100 partition provides strong support for AI inference and model development in scientific domains that need GPU acceleration but not national-scale systems.",
+  "keyFacts": {
+    "hardware": "23,040 CPU cores plus 6 nodes with 8 NVIDIA A100 GPUs and dual AMD EPYC 7543 CPUs",
+    "performance": "Hybrid CPU-GPU platform for materials and molecular modelling",
+    "funding": "MMM Hub with 70% partner capacity and 30% open UK research capacity",
+    "energy": "Shared specialist facility with focused GPU partition"
+  },
+  "access": {
+    "route": "Projects apply through the MMM Hub; around 30% of capacity is available free to UK researchers.",
+    "accessType": "public-application"
+  },
+  "useCases": [
+    "Materials-science model inference",
+    "GPU-accelerated chemistry workflows",
+    "Scientific deep-learning experiments"
+  ],
+  "hardwareTags": [
+    "nvidia-gpu",
+    "cpu-only"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "Materials and Molecular Modelling Hub",
+      "url": "https://mmmhub.ac.uk/"
+    },
+    {
+      "label": "UK Compute Roadmap - GOV.UK",
+      "url": "https://www.gov.uk/government/publications/uk-compute-roadmap/uk-compute-roadmap"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "slug": "cirrus",
+  "name": "Cirrus",
+  "category": "regional",
+  "status": "upgrading",
+  "location": {
+    "institution": "EPCC",
+    "city": "Edinburgh",
+    "nation": "Scotland",
+    "itl1": "Scotland",
+    "lat": 55.9222,
+    "lon": -3.1722
+  },
+  "operator": "EPCC",
+  "funder": "EPSRC / industry collaborations",
+  "opened": "2016-09",
+  "decommissioned": null,
+  "oneLiner": "EPCC's general-purpose Tier-2 system, refreshed into a large water-cooled CPU platform for simulation and preprocessing.",
+  "summary": "Cirrus is a general-purpose Tier-2 HPC system at EPCC that was upgraded in 2025 to an HPE Cray EX4000 cluster. The refresh introduced 256 CPU nodes with dual AMD EPYC 9825 processors, 73,728 CPU cores, Slingshot 11 networking, and a mix of standard and high-memory nodes. Although it has no GPUs, the platform is still relevant for AI through CPU-optimised inference, data preparation, and large ensemble evaluation workloads.",
+  "keyFacts": {
+    "hardware": "256 HPE Cray EX4000 CPU nodes with dual AMD EPYC 9825 processors; 73,728 CPU cores total",
+    "performance": "Large Tier-2 CPU platform with 1 PB Ceph and 1 PB Lustre storage",
+    "funding": "EPSRC and collaborative access model",
+    "energy": "Water-cooled nodes with modern Slingshot interconnect"
+  },
+  "access": {
+    "route": "Access is available through EPSRC allocations, industry collaborations, and some routes via the EIDF portal.",
+    "accessType": "public-application"
+  },
+  "useCases": [
+    "CPU-bound inference workloads",
+    "Data preprocessing and ensemble evaluation",
+    "General scientific computing for regional research users"
+  ],
+  "hardwareTags": [
+    "cpu-only"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "EPCC - Cirrus",
+      "url": "https://www.epcc.ed.ac.uk/hpc-services/cirrus"
+    },
+    {
+      "label": "Cirrus hardware and software",
+      "url": "https://www.cirrus.ac.uk/about/hardware-software/"
+    }
+  ]
+}

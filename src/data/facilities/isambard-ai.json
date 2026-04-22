@@ -1,0 +1,56 @@
+{
+  "slug": "isambard-ai",
+  "name": "Isambard-AI",
+  "category": "flagship",
+  "status": "operational",
+  "location": {
+    "institution": "National Composites Centre",
+    "city": "Bristol",
+    "nation": "England",
+    "itl1": "South West",
+    "lat": 51.5227,
+    "lon": -2.5878
+  },
+  "operator": "University of Bristol & Hewlett Packard Enterprise",
+  "funder": "UKRI / DSIT",
+  "opened": "2025-07",
+  "decommissioned": null,
+  "oneLiner": "UK flagship AI supercomputer and one half of the AIRR.",
+  "summary": "Isambard-AI opened in July 2025 at the National Composites Centre in Bristol. Built by the University of Bristol and HPE at a cost of £225 million, it uses 5,448 NVIDIA GH200 Grace-Hopper superchips in an HPE Cray EX architecture, delivering approximately 21 AI-exaflops. Its modular design uses zero-carbon electricity and fan-less liquid cooling that cut cooling power by up to 90% and emissions by 72%.",
+  "keyFacts": {
+    "hardware": "5,448 NVIDIA GH200 Grace-Hopper superchips on HPE Cray EX",
+    "performance": "Approximately 21 AI-exaflops",
+    "funding": "£225 million",
+    "energy": "Zero-carbon electricity and fan-less liquid cooling"
+  },
+  "access": {
+    "route": "Free to UK researchers and start-ups via UKRI allocation routes run with DSIT.",
+    "accessType": "public-application"
+  },
+  "useCases": [
+    "Large language model inference",
+    "Generative AI for public-sector workloads",
+    "Mixed-precision matrix operations"
+  ],
+  "hardwareTags": [
+    "nvidia-gpu",
+    "grace-hopper"
+  ],
+  "aiExaflops": 21,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "UKRI - Isambard-AI and Dawn AIRR supercomputers: Innovator route",
+      "url": "https://www.ukri.org/opportunity/isambard-ai-and-dawn-airr-supercomputers-innovator-route/"
+    },
+    {
+      "label": "University of Bristol - Isambard-AI launches July 2025",
+      "url": "https://www.bristol.ac.uk/research/centres/bristol-supercomputing/articles/2025/isambard-ai-launches-july-2025.html"
+    },
+    {
+      "label": "UK Compute Roadmap - GOV.UK",
+      "url": "https://www.gov.uk/government/publications/uk-compute-roadmap/uk-compute-roadmap"
+    }
+  ]
+}

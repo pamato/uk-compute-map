@@ -1,0 +1,51 @@
+{
+  "slug": "dirac-tursa",
+  "name": "DiRAC - Extreme Scaling (Tursa)",
+  "category": "mission",
+  "status": "operational",
+  "location": {
+    "institution": "EPCC",
+    "city": "Edinburgh",
+    "nation": "Scotland",
+    "itl1": "Scotland",
+    "lat": 55.9222,
+    "lon": -3.1722
+  },
+  "operator": "DiRAC / EPCC",
+  "funder": "STFC",
+  "opened": "2022-01",
+  "decommissioned": null,
+  "oneLiner": "DiRAC's extreme-scaling GPU service, built for giant parallel workloads in physics and AI-adjacent simulation.",
+  "summary": "DiRAC's Tursa service at EPCC is the programme's extreme-scaling platform and the most overtly accelerator-heavy DiRAC installation. It combines A100 GPU nodes, CPU support nodes, very large RAM, 5.1 PB of Lustre storage, and non-blocking HDR InfiniBand in water-cooled racks. The service is designed for demanding particle-physics and cosmology workloads, but the same characteristics make it suitable for AI inference or training tasks that need large parallel GPU estates.",
+  "keyFacts": {
+    "hardware": "64 nodes with 4 NVIDIA A100 80 GB GPUs, 114 nodes with 4 NVIDIA A100 40 GB GPUs, plus CPU nodes and 5.1 PB Lustre",
+    "performance": "291,840 Tensor cores with non-blocking HDR InfiniBand",
+    "funding": "STFC / DiRAC national service",
+    "energy": "Water-cooled racks for dense accelerator deployment"
+  },
+  "access": {
+    "route": "Projects apply via the DiRAC Resource Allocation Committee; trial and commercial access are also possible.",
+    "accessType": "public-application"
+  },
+  "useCases": [
+    "Extreme parallel GPU inference",
+    "Particle-physics simulation",
+    "Large-model experimentation with fast interconnect"
+  ],
+  "hardwareTags": [
+    "nvidia-gpu"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "EPCC - DiRAC Tursa",
+      "url": "https://www.epcc.ed.ac.uk/hpc-services/dirac-tursa-gpu"
+    },
+    {
+      "label": "DiRAC - Our services",
+      "url": "https://dirac.ac.uk/our-services/"
+    }
+  ]
+}

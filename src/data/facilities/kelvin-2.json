@@ -1,0 +1,53 @@
+{
+  "slug": "kelvin-2",
+  "name": "NI-HPC / Kelvin-2",
+  "category": "regional",
+  "status": "operational",
+  "location": {
+    "institution": "Queen's University Belfast",
+    "city": "Belfast",
+    "nation": "Northern Ireland",
+    "itl1": "Northern Ireland",
+    "lat": 54.5833,
+    "lon": -5.9336
+  },
+  "operator": "Queen's University Belfast / Ulster University",
+  "funder": "EPSRC / partner universities",
+  "opened": "2022-01",
+  "decommissioned": null,
+  "oneLiner": "Northern Ireland's flagship shared HPC service, mixing CPU scale with a broad GPU estate for UK research access.",
+  "summary": "Kelvin-2 is a Tier-2 HPC facility jointly run by Queen's University Belfast and Ulster University. Installed in 2022, it combines 102 Dell PowerEdge R6525 nodes with high-memory partitions, 2 PB of Lustre storage, and a varied accelerator mix including NVIDIA V100, A100, H100, AMD MI300X, and Intel Max 1100 GPUs. This diversity makes it useful for inference experimentation and data-intensive workloads while also serving as a regional access point for UK researchers outside Northern Ireland.",
+  "keyFacts": {
+    "hardware": "102 Dell PowerEdge R6525 nodes with AMD EPYC CPUs plus V100, A100, H100, MI300X, and Intel Max GPUs",
+    "performance": "Tier-2 multi-architecture research platform with 2 PB Lustre storage",
+    "funding": "Shared university platform with EPSRC-access allocation for part of capacity",
+    "energy": "Shared regional infrastructure with pooled accelerator access"
+  },
+  "access": {
+    "route": "About 35% of resources are available free to researchers across the UK via EPSRC's HPC access process; the rest is reserved for local institutions.",
+    "accessType": "public-application"
+  },
+  "useCases": [
+    "Precision medicine and neurotechnology",
+    "Data-intensive inference experiments across different GPU vendors",
+    "Regional HPC training and public research support"
+  ],
+  "hardwareTags": [
+    "nvidia-gpu",
+    "amd-gpu",
+    "intel-gpu"
+  ],
+  "aiExaflops": null,
+  "federationMembers": null,
+  "image": null,
+  "sources": [
+    {
+      "label": "Northern Ireland High Performance Computing - Kelvin2",
+      "url": "https://ni-hpc.ac.uk/Kelvin2/"
+    },
+    {
+      "label": "Northern Ireland High Performance Computing - About",
+      "url": "https://ni-hpc.ac.uk/about/"
+    }
+  ]
+}
