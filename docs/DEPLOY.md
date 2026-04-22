@@ -11,9 +11,8 @@
 
 1. Create a Cloudflare Pages project connected to the repository.
 2. Configure the build settings above.
-3. Enable Web Analytics in Cloudflare Pages.
-4. Replace `REPLACE_WITH_TOKEN` in `/Users/pauloserodio/Documents/projects/ai_compute-feature/src/layouts/Base.astro` with the analytics token Cloudflare provides.
-5. Push to `main` to trigger deployment.
+3. Enable Web Analytics in Cloudflare Pages from the dashboard.
+4. Push to `main` to trigger deployment.
 
 ## Ongoing workflow
 
@@ -29,3 +28,4 @@ Run these locally before shipping:
 - The site is fully static and does not require a custom runtime.
 - Facility pages are generated at build time from the JSON files under `src/data/facilities/`.
 - The basemap is served from `public/tiles/uk.pmtiles`, so Cloudflare Pages only needs to host the generated static files and the bundled PMTiles asset.
+- Cloudflare Pages can inject Web Analytics automatically, so no beacon token needs to live in the source code.
