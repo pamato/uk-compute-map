@@ -15,6 +15,13 @@ export function MapExplorer({ facilities }: { facilities: Facility[] }) {
   const filteredFacilities = applyFilters(facilities, filters);
   const selectedFacility =
     filteredFacilities.find((facility) => facility.slug === selectedSlug) ?? null;
+  const relatedFacilities = selectedFacility
+    ? filteredFacilities.filter(
+        (facility) =>
+          facility.location.lat === selectedFacility.location.lat &&
+          facility.location.lon === selectedFacility.location.lon,
+      )
+    : [];
   const funders = [...new Set(facilities.map((facility) => facility.funder))].sort();
   const itl1Regions = [
     ...new Set(facilities.map((facility) => facility.location.itl1)),
@@ -88,7 +95,12 @@ export function MapExplorer({ facilities }: { facilities: Facility[] }) {
         </div>
       </div>
 
-      <DetailPanel facility={selectedFacility} onClose={() => setSelectedSlug(null)} />
+      <DetailPanel
+        facility={selectedFacility}
+        onClose={() => setSelectedSlug(null)}
+        onSelectFacility={setSelectedSlug}
+        relatedFacilities={relatedFacilities}
+      />
     </section>
   );
 }

@@ -56,6 +56,29 @@ const CATEGORY_LABEL: Record<Category, string> = {
   mission: 'Mission compute',
 };
 
+const CATEGORY_CHIP_CLASS: Record<Category, { active: string; idle: string }> = {
+  flagship: {
+    active: 'border-category-flagship bg-category-flagship text-white',
+    idle: 'border-category-flagship/35 bg-category-flagship/10 text-category-flagship',
+  },
+  backbone: {
+    active: 'border-category-backbone bg-category-backbone text-white',
+    idle: 'border-category-backbone/35 bg-category-backbone/10 text-category-backbone',
+  },
+  specialist: {
+    active: 'border-category-specialist bg-category-specialist text-white',
+    idle: 'border-category-specialist/35 bg-category-specialist/10 text-category-specialist',
+  },
+  regional: {
+    active: 'border-category-regional bg-category-regional text-white',
+    idle: 'border-category-regional/35 bg-category-regional/10 text-category-regional',
+  },
+  mission: {
+    active: 'border-category-mission bg-category-mission text-white',
+    idle: 'border-category-mission/35 bg-category-mission/10 text-category-mission',
+  },
+};
+
 const STATUS_LABEL: Record<Status, string> = {
   operational: 'Operational',
   upgrading: 'Upgrading',
@@ -145,6 +168,7 @@ export function FilterBar({
             <Chip
               active={state.categories?.includes(category) ?? false}
               key={category}
+              tone={CATEGORY_CHIP_CLASS[category]}
               onClick={() =>
                 setState((current) => ({
                   ...current,
@@ -315,18 +339,24 @@ function Chip({
   active,
   children,
   onClick,
+  tone,
 }: {
   active: boolean;
   children: React.ReactNode;
   onClick: () => void;
+  tone?: { active: string; idle: string };
 }) {
   return (
     <button
       aria-pressed={active}
       className={`rounded-full border px-3 py-1.5 text-sm transition focus:outline-none focus:ring-2 focus:ring-ink ${
-        active
-          ? 'border-ink bg-ink text-white'
-          : 'border-stone-300 bg-white text-stone-700 hover:border-stone-500 hover:text-ink'
+        tone
+          ? active
+            ? tone.active
+            : `${tone.idle} hover:border-stone-500`
+          : active
+            ? 'border-ink bg-ink text-white'
+            : 'border-stone-300 bg-white text-stone-700 hover:border-stone-500 hover:text-ink'
       }`}
       onClick={onClick}
       type="button"
