@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, type RefObject } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import maplibregl, { type StyleSpecification } from 'maplibre-gl';
 import { Protocol } from 'pmtiles';
 import { layers, namedTheme } from 'protomaps-themes-base';
@@ -32,11 +32,6 @@ const MAP_MAX_BOUNDS: [[number, number], [number, number]] = [
 const INITIAL_ZOOM = 5.3;
 const MIN_ZOOM = 4.5;
 const MAX_ZOOM = 10;
-// Screen-space clustering threshold, in pixels. Markers closer than this at
-// INITIAL_ZOOM are grouped into a single cluster button, matching the
-// behaviour of the previous SVG implementation where co-located host
-// institutions (e.g. Cambridge: CSD3 + DiRAC-CSD3 + Dawn) collapsed.
-const CLUSTER_THRESHOLD_PX = 24;
 
 let protocolRegistered = false;
 
@@ -53,12 +48,6 @@ export interface MapViewProps {
   selectedSlug: string | null;
 }
 
-interface GroupedMarker {
-  facilities: Facility[];
-  lon: number;
-  lat: number;
-}
-
 export function MapView({
   facilities,
   onSelect,
@@ -66,18 +55,29 @@ export function MapView({
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
-  const markerRefs = useRef<maplibregl.Marker[]>([]);
-  // onSelect / selectedSlug can change on every render (parent state), but
-  // we want a single map instance. Keep the latest closures in refs so the
-  // marker click handler always sees current state without tearing down the
-  // map.
-  const onSelectRef = useRef(onSelect);
-  const selectedSlugRef = useRef(selectedSlug);
-  onSelectRef.current = onSelect;
-  selectedSlugRef.current = selectedSlug;
-
-  const markerGroups = useMemo(
-    () => buildMarkerGroups(facilities),
+  const popupRef = useRef<maplibregl.Popup | null>(null);
+  const featureCollection = useMemo(
+    () => ({
+      type: 'FeatureCollection' as const,
+      features: facilities.map((facility) => ({
+        type: 'Feature' as const,
+        geometry: {
+          type: 'Point' as const,
+          coordinates: [facility.location.lon, facility.location.lat] as [
+            number,
+            number,
+          ],
+        },
+        properties: {
+          slug: facility.slug,
+          name: facility.name,
+          shortLabel: shortLabelFor(facility),
+          category: facility.category,
+          status: facility.status,
+          countLabel: '1 infra',
+        },
+      })),
+    }),
     [facilities],
   );
 
@@ -117,61 +117,238 @@ export function MapView({
       attributionControl: { compact: true },
     });
 
+    map.scrollZoom.disable();
     map.touchZoomRotate.disableRotation();
     map.keyboard.disableRotation();
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
 
+    map.on('load', () => {
+      map.addSource('facilities', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: [],
+        },
+        cluster: true,
+        clusterRadius: 42,
+        clusterMaxZoom: 7,
+      });
+
+      map.addLayer({
+        id: 'facility-clusters',
+        type: 'circle',
+        source: 'facilities',
+        filter: ['has', 'point_count'],
+        paint: {
+          'circle-color': '#f8f4ea',
+          'circle-radius': ['step', ['get', 'point_count'], 12, 3, 16, 6, 20],
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-width': 3,
+          'circle-opacity': 0.98,
+        },
+      });
+
+      map.addLayer({
+        id: 'facility-cluster-halo',
+        type: 'circle',
+        source: 'facilities',
+        filter: ['has', 'point_count'],
+        paint: {
+          'circle-color': '#000000',
+          'circle-radius': ['step', ['get', 'point_count'], 14, 3, 18, 6, 22],
+          'circle-opacity': 0.08,
+        },
+      });
+
+      map.addLayer({
+        id: 'facility-cluster-count',
+        type: 'symbol',
+        source: 'facilities',
+        filter: ['has', 'point_count'],
+        layout: {
+          'text-field': ['concat', ['to-string', ['get', 'point_count']], ' infra'],
+          'text-size': 12,
+          'text-font': ['Noto Sans Regular'],
+          'text-offset': [0, 0],
+        },
+        paint: {
+          'text-color': '#3b3b36',
+        },
+      });
+
+      map.addLayer({
+        id: 'facility-points',
+        type: 'circle',
+        source: 'facilities',
+        filter: ['!', ['has', 'point_count']],
+        paint: {
+          'circle-color': [
+            'match',
+            ['get', 'category'],
+            'flagship',
+            CATEGORY_COLOR.flagship,
+            'backbone',
+            CATEGORY_COLOR.backbone,
+            'specialist',
+            CATEGORY_COLOR.specialist,
+            'regional',
+            CATEGORY_COLOR.regional,
+            'mission',
+            CATEGORY_COLOR.mission,
+            '#1f4e79',
+          ],
+          'circle-radius': 7,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-width': 3,
+          'circle-opacity': [
+            'match',
+            ['get', 'status'],
+            'operational',
+            STATUS_OPACITY.operational,
+            'upgrading',
+            STATUS_OPACITY.upgrading,
+            'planned',
+            STATUS_OPACITY.planned,
+            'decommissioned',
+            STATUS_OPACITY.decommissioned,
+            1,
+          ],
+        },
+      });
+
+      map.addLayer({
+        id: 'selected-facility-ring',
+        type: 'circle',
+        source: 'facilities',
+        filter: ['==', ['get', 'slug'], ''],
+        paint: {
+          'circle-color': 'transparent',
+          'circle-radius': 12,
+          'circle-stroke-color': 'rgba(26,26,26,0.25)',
+          'circle-stroke-width': 4,
+        },
+      });
+
+      map.on('mouseenter', 'facility-points', () => {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+      map.on('mouseleave', 'facility-points', () => {
+        map.getCanvas().style.cursor = '';
+      });
+      map.on('mouseenter', 'facility-clusters', () => {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+      map.on('mouseleave', 'facility-clusters', () => {
+        map.getCanvas().style.cursor = '';
+      });
+
+      map.on('click', 'facility-points', (event) => {
+        const feature = event.features?.[0];
+        if (!feature) return;
+        const slug = feature.properties?.slug;
+        if (typeof slug === 'string') {
+          onSelect(slug);
+        }
+      });
+
+      map.on('click', 'facility-clusters', async (event) => {
+        const feature = event.features?.[0];
+        if (!feature) return;
+
+        const source = map.getSource('facilities') as maplibregl.GeoJSONSource;
+        const clusterId = Number(feature.properties?.cluster_id);
+        const zoom = await source.getClusterExpansionZoom(clusterId);
+        const coordinates = feature.geometry.type === 'Point'
+          ? (feature.geometry.coordinates as [number, number])
+          : MAP_CENTRE;
+        map.easeTo({
+          center: coordinates,
+          zoom: Math.max(zoom ?? INITIAL_ZOOM + 1, INITIAL_ZOOM + 1),
+          duration: 600,
+        });
+      });
+    });
+
     mapRef.current = map;
 
     return () => {
-      markerRefs.current.forEach((marker) => marker.remove());
-      markerRefs.current = [];
+      popupRef.current?.remove();
       map.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [onSelect]);
 
-  // Render / re-render markers whenever the filtered facility set changes.
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
-    const renderMarkers = () => {
-      markerRefs.current.forEach((marker) => marker.remove());
-      markerRefs.current = markerGroups.map((group) =>
-        createMarker(group, map, onSelectRef, selectedSlugRef),
-      );
-      // Apply selected-state styling on first paint.
-      syncSelectionStyling(markerRefs.current, markerGroups, selectedSlugRef.current);
+    const syncData = () => {
+      const source = map.getSource('facilities') as maplibregl.GeoJSONSource | undefined;
+      if (!source) return;
+      source.setData(featureCollection);
     };
 
     if (map.isStyleLoaded()) {
-      renderMarkers();
+      syncData();
     } else {
-      map.once('load', renderMarkers);
+      map.once('load', syncData);
     }
 
     return () => {
-      map.off('load', renderMarkers);
+      map.off('load', syncData);
     };
-  }, [markerGroups]);
+  }, [featureCollection]);
 
-  // When the selected slug changes, refresh styling without rebuilding the
-  // marker DOM nodes (avoids flicker).
   useEffect(() => {
-    syncSelectionStyling(markerRefs.current, markerGroups, selectedSlug);
-  }, [markerGroups, selectedSlug]);
+    const map = mapRef.current;
+    if (!map || !map.getLayer('selected-facility-ring')) return;
+
+    map.setFilter('selected-facility-ring', [
+      '==',
+      ['get', 'slug'],
+      selectedSlug ?? '',
+    ]);
+
+    popupRef.current?.remove();
+
+    if (!selectedSlug) return;
+
+    const facility = facilities.find((item) => item.slug === selectedSlug);
+    if (!facility) return;
+
+    map.easeTo({
+      center: [facility.location.lon, facility.location.lat],
+      zoom: Math.max(map.getZoom(), 6.7),
+      duration: 650,
+    });
+
+    popupRef.current = new maplibregl.Popup({
+      closeButton: false,
+      closeOnClick: false,
+      offset: 18,
+      className: 'uk-compute-map-popup',
+    })
+      .setLngLat([facility.location.lon, facility.location.lat])
+      .setHTML(
+        `<div class="space-y-1">
+          <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">${facility.location.city}</div>
+          <div class="font-serif text-base text-stone-900">${facility.name}</div>
+          <div class="text-sm text-stone-600">${facility.oneLiner}</div>
+        </div>`,
+      )
+      .addTo(map);
+  }, [facilities, selectedSlug]);
 
   return (
-    <div className="overflow-hidden rounded-[2rem] border border-stone-300 bg-white shadow-[0_28px_60px_-40px_rgba(20,20,20,0.5)]">
+    <div className="overflow-hidden rounded-[2rem] border border-white/45 bg-white/55 shadow-[0_28px_60px_-40px_rgba(20,20,20,0.36)] backdrop-blur">
       <div className="border-b border-stone-200 px-5 py-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="font-serif text-2xl">Where the infrastructure lives</h2>
             <p className="mt-1 text-sm text-stone-600">
-              An interactive UK basemap with institution-level points and
-              simple clustering where multiple facilities share a host
-              location.
+              Pan and zoom the UK map, then click a dot to open the facility
+              panel. Scroll continues over the map; wheel zoom is disabled to
+              keep the page easy to navigate.
             </p>
           </div>
           <div className="flex flex-wrap gap-3 text-xs text-stone-600">
@@ -190,7 +367,7 @@ export function MapView({
 
       <div
         aria-label="Interactive UK compute infrastructure map"
-        className="relative aspect-[10/11] w-full bg-[linear-gradient(180deg,#f7f2e8_0%,#ede4d5_46%,#e8efe7_100%)]"
+        className="relative h-[62vh] min-h-[520px] w-full bg-[linear-gradient(180deg,rgba(247,242,232,0.68)_0%,rgba(237,228,213,0.72)_46%,rgba(232,239,231,0.76)_100%)]"
         ref={containerRef}
         role="region"
       />
@@ -198,139 +375,31 @@ export function MapView({
   );
 }
 
-function createMarker(
-  group: GroupedMarker,
-  map: maplibregl.Map,
-  onSelectRef: RefObject<(slug: string) => void>,
-  selectedSlugRef: RefObject<string | null>,
-): maplibregl.Marker {
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.setAttribute('aria-label', markerLabel(group));
-  button.dataset.slugs = group.facilities.map((f) => f.slug).join(',');
-  applyMarkerStyles(button, group, selectedSlugRef.current);
-  button.addEventListener('click', (event) => {
-    event.stopPropagation();
-    const currentSelected = selectedSlugRef.current;
-    const nextFacility =
-      group.facilities.length === 1
-        ? group.facilities[0]
-        : cycleGroup(group.facilities, currentSelected);
-    onSelectRef.current?.(nextFacility.slug);
-  });
+function shortLabelFor(facility: Facility) {
+  const labelBySlug: Record<string, string> = {
+    'isambard-ai': 'Isambard-AI',
+    dawn: 'Dawn',
+    sunrise: 'Sunrise',
+    'epcc-national': 'EPCC',
+    archer2: 'ARCHER2',
+    'mary-coombs': 'Mary Coombs',
+    'met-office': 'Met Office',
+    eidf: 'EIDF',
+    jasmin: 'JASMIN',
+    iris: 'IRIS',
+    'kelvin-2': 'Kelvin-2',
+    cirrus: 'Cirrus',
+    bede: 'Bede',
+    'young-mmm': 'Young',
+    csd3: 'CSD3',
+    'gridpp-ral': 'GridPP',
+    'dirac-tursa': 'Tursa',
+    'dirac-csd3': 'DiRAC CSD3',
+    'dirac-leicester': 'DiRAC Leicester',
+    'dirac-durham': 'DiRAC Durham',
+    awe: 'AWE',
+    'isambard-3': 'Isambard 3',
+  };
 
-  return new maplibregl.Marker({ element: button, anchor: 'center' })
-    .setLngLat([group.lon, group.lat])
-    .addTo(map);
-}
-
-function syncSelectionStyling(
-  markers: maplibregl.Marker[],
-  groups: GroupedMarker[],
-  selectedSlug: string | null,
-) {
-  markers.forEach((marker, index) => {
-    const group = groups[index];
-    if (!group) return;
-    const element = marker.getElement() as HTMLButtonElement;
-    applyMarkerStyles(element, group, selectedSlug);
-  });
-}
-
-function applyMarkerStyles(
-  element: HTMLButtonElement,
-  group: GroupedMarker,
-  selectedSlug: string | null,
-) {
-  const isCluster = group.facilities.length > 1;
-  const selectedInGroup = group.facilities.some(
-    (facility) => facility.slug === selectedSlug,
-  );
-  const activeFacility =
-    group.facilities.find((facility) => facility.slug === selectedSlug) ??
-    group.facilities[0];
-  const color = CATEGORY_COLOR[activeFacility.category];
-  const opacity = STATUS_OPACITY[activeFacility.status];
-
-  const size = isCluster ? 40 : 14;
-  element.textContent = isCluster ? String(group.facilities.length) : '';
-  element.style.width = `${size}px`;
-  element.style.height = `${size}px`;
-  element.style.display = 'flex';
-  element.style.alignItems = 'center';
-  element.style.justifyContent = 'center';
-  element.style.padding = '0';
-  element.style.borderRadius = '9999px';
-  element.style.border = '3px solid white';
-  element.style.boxShadow = '0 4px 10px rgba(0,0,0,0.25)';
-  element.style.backgroundColor = color;
-  element.style.color = 'white';
-  element.style.fontFamily = 'inherit';
-  element.style.fontSize = isCluster ? '13px' : '0';
-  element.style.fontWeight = '600';
-  element.style.cursor = 'pointer';
-  element.style.opacity = String(opacity);
-  element.style.transition = 'transform 120ms ease, outline-color 120ms ease';
-  element.style.outline = selectedInGroup
-    ? '3px solid rgba(26,26,26,0.2)'
-    : '3px solid transparent';
-  element.style.outlineOffset = '2px';
-}
-
-function buildMarkerGroups(facilities: Facility[]): GroupedMarker[] {
-  const groups: GroupedMarker[] = [];
-  // Rough screen-space threshold at INITIAL_ZOOM (~5.3) in geographic units.
-  // At zoom 5 over the UK, 1 screen pixel ~ 0.035 degrees longitude. We fold
-  // anything within CLUSTER_THRESHOLD_PX * that factor into a single group.
-  const degreesPerPixel = 0.035;
-  const threshold = CLUSTER_THRESHOLD_PX * degreesPerPixel;
-
-  for (const facility of facilities) {
-    const { lon, lat } = facility.location;
-    const existing = groups.find(
-      (group) =>
-        Math.abs(group.lon - lon) < threshold &&
-        Math.abs(group.lat - lat) < threshold,
-    );
-
-    if (existing) {
-      existing.facilities.push(facility);
-      existing.lon = average(existing.lon, lon);
-      existing.lat = average(existing.lat, lat);
-    } else {
-      groups.push({
-        facilities: [facility],
-        lon,
-        lat,
-      });
-    }
-  }
-
-  return groups;
-}
-
-function cycleGroup(facilities: Facility[], selectedSlug: string | null) {
-  const currentIndex = facilities.findIndex(
-    (facility) => facility.slug === selectedSlug,
-  );
-
-  if (currentIndex === -1) {
-    return facilities[0];
-  }
-
-  return facilities[(currentIndex + 1) % facilities.length];
-}
-
-function markerLabel(group: GroupedMarker) {
-  if (group.facilities.length === 1) {
-    return group.facilities[0].name;
-  }
-
-  return `${group.facilities.length} facilities at this location: ${group.facilities
-    .map((facility) => facility.name)
-    .join(', ')}`;
-}
-
-function average(left: number, right: number) {
-  return (left + right) / 2;
+  return labelBySlug[facility.slug] ?? facility.name;
 }

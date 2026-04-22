@@ -120,7 +120,7 @@ export function FilterBar({
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">
-            Filter the map
+            Filters
           </p>
           <p className="mt-2 max-w-2xl text-sm text-stone-700">
             Combine category, status, and geography to isolate the parts of the
@@ -139,7 +139,7 @@ export function FilterBar({
         ) : null}
       </div>
 
-      <div className="mt-5 grid gap-4 lg:grid-cols-3">
+      <div className="mt-5 space-y-4">
         <FilterGroup label="Category">
           {CATEGORIES.map((category) => (
             <Chip
@@ -202,7 +202,7 @@ export function FilterBar({
       </button>
 
       {advancedOpen ? (
-        <div className="mt-5 grid gap-4 border-t border-stone-200 pt-5 lg:grid-cols-2">
+        <div className="mt-5 space-y-4 border-t border-stone-200 pt-5">
           <FilterGroup label="Access">
             {ACCESS_TYPES.map((accessType) => (
               <Chip

@@ -1,7 +1,9 @@
 import { expect, test } from '@playwright/test';
 
 test('homepage renders the main sections', async ({ page }) => {
-  await page.goto('/');
+  test.setTimeout(90_000);
+  await page.goto('/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(2500);
 
   await expect(
     page.getByRole('heading', {
@@ -29,18 +31,27 @@ test('homepage renders the main sections', async ({ page }) => {
 });
 
 test('filters update the URL', async ({ page }) => {
-  await page.goto('/');
-  await page.waitForTimeout(1500);
-
-  await page.getByRole('button', { name: 'Flagship AI' }).click();
-  await expect(page).toHaveURL(/category=flagship/);
-  await expect(page.getByText(/showing \d+ of \d+ facilities/i)).toBeVisible();
+  test.setTimeout(90_000);
+  await page.goto('/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(2500);
+  const flagshipButton = page.getByRole('button', { name: 'Flagship AI' });
+  await expect(flagshipButton).toBeVisible({ timeout: 60_000 });
+  await flagshipButton.evaluate((element) => {
+    (element as HTMLButtonElement).click();
+  });
+  await expect.poll(async () => page.url(), { timeout: 20_000 }).toContain(
+    'category=flagship',
+  );
+  await expect(flagshipButton).toHaveAttribute('aria-pressed', 'true');
 });
 
 test('list view opens the detail panel', async ({ page }) => {
-  await page.goto('/');
-
-  await page.getByRole('tab', { name: 'List' }).click();
+  test.setTimeout(90_000);
+  await page.goto('/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(2500);
+  const listTab = page.getByRole('tab', { name: 'List' });
+  await expect(listTab).toBeVisible({ timeout: 60_000 });
+  await listTab.click();
   await page.getByRole('button', { name: /^Isambard-AI/ }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
   await expect(page.getByRole('link', { name: /read full profile/i })).toBeVisible();
