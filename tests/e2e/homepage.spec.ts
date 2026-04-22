@@ -30,6 +30,7 @@ test('homepage renders the main sections', async ({ page }) => {
 
 test('filters update the URL', async ({ page }) => {
   await page.goto('/');
+  await page.waitForTimeout(1500);
 
   await page.getByRole('button', { name: 'Flagship AI' }).click();
   await expect(page).toHaveURL(/category=flagship/);

@@ -8,6 +8,9 @@ It combines flagship AIRR systems, backbone HPC services, specialist data platfo
 
 - Astro
 - React islands
+- MapLibre GL
+- Protomaps PMTiles
+- Recharts
 - Tailwind CSS
 - TypeScript
 - Zod
@@ -31,3 +34,7 @@ It combines flagship AIRR systems, backbone HPC services, specialist data platfo
 ## Deployment
 
 Deployment notes live in [docs/DEPLOY.md](/Users/pauloserodio/Documents/projects/ai_compute-feature/docs/DEPLOY.md).
+
+## Visual Review
+
+Refreshed screenshots of the current library-based implementation are saved in `/Users/pauloserodio/Documents/projects/ai_compute/snapshots/2026-04-22-library-swap`.

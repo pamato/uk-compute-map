@@ -26,18 +26,18 @@ If the session ends mid-execution, a fresh Claude session can pick up from here:
 | Feature buildout | 2026-04-21 | Tasks 4+ | `working tree` | Populated all 22 facility JSONs, added filters/format/trajectory libs, built the interactive explorer, charts, facility pages, CI, deploy docs, and Playwright smoke tests. |
 | Verification | 2026-04-21 | QA | `working tree` | `npm run validate`, `npm test`, `npm run build`, and `npm run test:e2e` all pass. |
 | Tooling fix | 2026-04-22 | Typecheck gap | `working tree` | Installed `@astrojs/check` + `@types/node`, added `typecheck` npm script, wired CI step, silenced `is:inline` hint on Base.astro. `npm run typecheck` now reports 0/0/0. |
+| Library reconciliation | 2026-04-22 | Map + charts | `working tree` | Replaced the placeholder custom SVG map with MapLibre + PMTiles and replaced the custom charts with Recharts. Added `scripts/fetch-tiles.sh`, refreshed browser smoke tests, and captured a new screenshot set at `/Users/pauloserodio/Documents/projects/ai_compute/snapshots/2026-04-22-library-swap`. |
 
 ## Current state
 
-- **Current task:** Library reconciliation (swap custom SVG map for MapLibre + PMTiles, custom charts for Recharts).
-- **Next action:** Install map/chart dependencies and refactor MapExplorer/TrajectoryChart/CountryBenchmark.
+- **Current task:** Ready for review or commit.
+- **Next action:** Review the refreshed screenshots, then decide whether to commit the library swap and proceed to Cloudflare deployment.
 - **Open review issues:** none.
 
 ## Notes
 
-- The initial shipped implementation stayed within the repo rule of avoiding new dependencies; custom SVG map + charts were used as a placeholder.
-- The user has now approved the plan's original library choices (MapLibre GL, PMTiles, Recharts) — reconciliation is the next task.
-- `npm run typecheck` is wired via `astro check` and green.
+- The original placeholder map/chart implementations have now been reconciled back to the planned stack: MapLibre GL, PMTiles, and Recharts.
+- `npm run typecheck` is wired via `astro check` and green apart from two non-blocking Recharts deprecation hints for `Cell`.
 
 ## Model strategy
 

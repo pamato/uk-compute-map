@@ -1,10 +1,21 @@
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  LabelList,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+
 import { COUNTRY_BENCHMARK } from '../data/countries';
 
 export function CountryBenchmark() {
   const countries = [...COUNTRY_BENCHMARK].sort(
     (left, right) => right.publicAiExaflops - left.publicAiExaflops,
   );
-  const maxValue = countries[0]?.publicAiExaflops ?? 1;
 
   return (
     <div className="rounded-[2rem] border border-stone-300 bg-white p-6 shadow-[0_28px_60px_-40px_rgba(20,20,20,0.5)]">
@@ -21,41 +32,71 @@ export function CountryBenchmark() {
         </p>
       </div>
 
-      <ol className="mt-8 space-y-4">
-        {countries.map((country) => {
-          const width = Math.max(
-            8,
-            (country.publicAiExaflops / maxValue) * 100,
-          );
-
-          return (
-            <li key={country.iso2}>
-              <div className="flex items-end justify-between gap-4">
-                <div>
-                  <p className="font-serif text-xl">{country.country}</p>
-                  <p className="mt-1 text-sm text-stone-600">{country.note}</p>
-                </div>
-                <p className="text-sm font-semibold text-stone-700">
-                  {country.publicAiExaflops} AI-exaflops
-                </p>
-              </div>
-              <div className="mt-3 h-3 rounded-full bg-stone-200">
-                <div
-                  className={`h-full rounded-full ${
-                    country.iso2 === 'GB'
-                      ? 'bg-category-flagship'
-                      : 'bg-stone-700'
-                  }`}
-                  style={{ width: `${width}%` }}
+      <div className="mt-8">
+        <ResponsiveContainer height={320} width="100%">
+          <BarChart
+            data={countries}
+            layout="vertical"
+            margin={{ top: 8, right: 36, bottom: 8, left: 68 }}
+          >
+            <CartesianGrid
+              horizontal={false}
+              stroke="#e7dfd0"
+              strokeDasharray="4 6"
+            />
+            <XAxis
+              axisLine={false}
+              tick={{ fill: '#5b5246', fontSize: 12 }}
+              tickLine={false}
+              type="number"
+            />
+            <YAxis
+              axisLine={false}
+              dataKey="country"
+              tick={{ fill: '#5b5246', fontSize: 12 }}
+              tickLine={false}
+              type="category"
+              width={100}
+            />
+            <Tooltip
+              contentStyle={{
+                border: '1px solid #d6cfc3',
+                borderRadius: '16px',
+                boxShadow: '0 16px 40px -24px rgba(20,20,20,0.45)',
+              }}
+              formatter={(value) => [
+                `${value ?? 0} AI-exaflops`,
+                'Estimate',
+              ]}
+              labelFormatter={(label) => label}
+            />
+            <Bar dataKey="publicAiExaflops" radius={[0, 6, 6, 0]}>
+              <LabelList
+                dataKey="publicAiExaflops"
+                fill="#5b5246"
+                fontSize={12}
+                position="right"
+              />
+              {countries.map((country) => (
+                <Cell
+                  fill={country.iso2 === 'GB' ? '#1f4e79' : '#5b5246'}
+                  key={country.iso2}
                 />
-              </div>
-              <p className="mt-2 text-xs uppercase tracking-[0.16em] text-stone-500">
-                Source: {country.source}
-              </p>
-            </li>
-          );
-        })}
-      </ol>
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      <ul className="mt-5 space-y-2 text-sm text-stone-600">
+        {countries.map((country) => (
+          <li key={country.iso2}>
+            <span className="font-medium text-stone-800">{country.country}:</span>{' '}
+            {country.note}{' '}
+            <span className="text-stone-500">(Source: {country.source})</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

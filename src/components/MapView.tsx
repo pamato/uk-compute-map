@@ -1,11 +1,11 @@
-import type { Facility } from '../data/schema';
+import { useEffect, useMemo, useRef, type RefObject } from 'react';
+import maplibregl, { type StyleSpecification } from 'maplibre-gl';
+import { Protocol } from 'pmtiles';
+import { layers, namedTheme } from 'protomaps-themes-base';
 
-const MAP_BOUNDS = {
-  minLon: -8.7,
-  maxLon: 1.8,
-  minLat: 49.8,
-  maxLat: 60.9,
-};
+import 'maplibre-gl/dist/maplibre-gl.css';
+
+import type { Facility } from '../data/schema';
 
 const CATEGORY_COLOR: Record<Facility['category'], string> = {
   flagship: '#1f4e79',
@@ -22,6 +22,30 @@ const STATUS_OPACITY: Record<Facility['status'], number> = {
   decommissioned: 0.22,
 };
 
+const TILE_URL = 'pmtiles:///tiles/uk.pmtiles';
+const MAP_CENTRE: [number, number] = [-3.5, 54.5];
+const MAP_MAX_BOUNDS: [[number, number], [number, number]] = [
+  [-11, 49],
+  [2.5, 61],
+];
+const INITIAL_ZOOM = 5.3;
+const MIN_ZOOM = 4.5;
+const MAX_ZOOM = 10;
+// Screen-space clustering threshold, in pixels. Markers closer than this at
+// INITIAL_ZOOM are grouped into a single cluster button, matching the
+// behaviour of the previous SVG implementation where co-located host
+// institutions (e.g. Cambridge: CSD3 + DiRAC-CSD3 + Dawn) collapsed.
+const CLUSTER_THRESHOLD_PX = 24;
+
+let protocolRegistered = false;
+
+function ensurePmtilesProtocol() {
+  if (protocolRegistered) return;
+  const protocol = new Protocol();
+  maplibregl.addProtocol('pmtiles', protocol.tile);
+  protocolRegistered = true;
+}
+
 export interface MapViewProps {
   facilities: Facility[];
   onSelect: (slug: string) => void;
@@ -30,8 +54,8 @@ export interface MapViewProps {
 
 interface GroupedMarker {
   facilities: Facility[];
-  x: number;
-  y: number;
+  lon: number;
+  lat: number;
 }
 
 export function MapView({
@@ -39,7 +63,103 @@ export function MapView({
   onSelect,
   selectedSlug,
 }: MapViewProps) {
-  const markers = buildMarkerGroups(facilities);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const mapRef = useRef<maplibregl.Map | null>(null);
+  const markerRefs = useRef<maplibregl.Marker[]>([]);
+  // onSelect / selectedSlug can change on every render (parent state), but
+  // we want a single map instance. Keep the latest closures in refs so the
+  // marker click handler always sees current state without tearing down the
+  // map.
+  const onSelectRef = useRef(onSelect);
+  const selectedSlugRef = useRef(selectedSlug);
+  onSelectRef.current = onSelect;
+  selectedSlugRef.current = selectedSlug;
+
+  const markerGroups = useMemo(
+    () => buildMarkerGroups(facilities),
+    [facilities],
+  );
+
+  useEffect(() => {
+    if (!containerRef.current || mapRef.current) return;
+    ensurePmtilesProtocol();
+
+    const theme = namedTheme('light');
+    const style: StyleSpecification = {
+      version: 8,
+      glyphs:
+        'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf',
+      sprite:
+        'https://protomaps.github.io/basemaps-assets/sprites/v4/light',
+      sources: {
+        protomaps: {
+          type: 'vector',
+          url: TILE_URL,
+          attribution:
+            '<a href="https://protomaps.com" target="_blank" rel="noopener">Protomaps</a> &copy; <a href="https://openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+        },
+      },
+      layers: layers('protomaps', theme, { lang: 'en' }),
+    };
+
+    const map = new maplibregl.Map({
+      container: containerRef.current,
+      style,
+      center: MAP_CENTRE,
+      zoom: INITIAL_ZOOM,
+      minZoom: MIN_ZOOM,
+      maxZoom: MAX_ZOOM,
+      maxBounds: MAP_MAX_BOUNDS,
+      dragRotate: false,
+      pitchWithRotate: false,
+      touchPitch: false,
+      attributionControl: { compact: true },
+    });
+
+    map.touchZoomRotate.disableRotation();
+    map.keyboard.disableRotation();
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+
+    mapRef.current = map;
+
+    return () => {
+      markerRefs.current.forEach((marker) => marker.remove());
+      markerRefs.current = [];
+      map.remove();
+      mapRef.current = null;
+    };
+  }, []);
+
+  // Render / re-render markers whenever the filtered facility set changes.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const renderMarkers = () => {
+      markerRefs.current.forEach((marker) => marker.remove());
+      markerRefs.current = markerGroups.map((group) =>
+        createMarker(group, map, onSelectRef, selectedSlugRef),
+      );
+      // Apply selected-state styling on first paint.
+      syncSelectionStyling(markerRefs.current, markerGroups, selectedSlugRef.current);
+    };
+
+    if (map.isStyleLoaded()) {
+      renderMarkers();
+    } else {
+      map.once('load', renderMarkers);
+    }
+
+    return () => {
+      map.off('load', renderMarkers);
+    };
+  }, [markerGroups]);
+
+  // When the selected slug changes, refresh styling without rebuilding the
+  // marker DOM nodes (avoids flicker).
+  useEffect(() => {
+    syncSelectionStyling(markerRefs.current, markerGroups, selectedSlug);
+  }, [markerGroups, selectedSlug]);
 
   return (
     <div className="overflow-hidden rounded-[2rem] border border-stone-300 bg-white shadow-[0_28px_60px_-40px_rgba(20,20,20,0.5)]">
@@ -48,8 +168,9 @@ export function MapView({
           <div>
             <h2 className="font-serif text-2xl">Where the infrastructure lives</h2>
             <p className="mt-1 text-sm text-stone-600">
-              An abstract UK outline with institution-level points and simple
-              clustering where multiple facilities share a host location.
+              An interactive UK basemap with institution-level points and
+              simple clustering where multiple facilities share a host
+              location.
             </p>
           </div>
           <div className="flex flex-wrap gap-3 text-xs text-stone-600">
@@ -66,168 +187,120 @@ export function MapView({
         </div>
       </div>
 
-      <div className="relative aspect-[10/11] bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.65),_rgba(255,255,255,0)),linear-gradient(180deg,#f7f2e8_0%,#ede4d5_46%,#e8efe7_100%)]">
-        <svg
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full"
-          viewBox="0 0 1000 1100"
-        >
-          <defs>
-            <pattern
-              height="80"
-              id="grid"
-              patternUnits="userSpaceOnUse"
-              width="80"
-            >
-              <path
-                d="M 80 0 L 0 0 0 80"
-                fill="none"
-                stroke="rgba(121, 108, 88, 0.14)"
-                strokeWidth="1"
-              />
-            </pattern>
-            <filter id="shadow">
-              <feDropShadow
-                dx="0"
-                dy="14"
-                floodColor="rgba(37,28,18,0.18)"
-                stdDeviation="18"
-              />
-            </filter>
-          </defs>
-
-          <rect fill="url(#grid)" height="1100" opacity="0.45" width="1000" />
-
-          <path
-            d="M562 74 650 116 706 207 674 287 718 383 666 500 664 623 608 742 590 858 545 995 451 1042 370 1008 338 900 270 824 259 690 220 564 248 443 304 351 320 224 395 137 488 96Z"
-            fill="#fdf8ef"
-            filter="url(#shadow)"
-            stroke="#cdbfaa"
-            strokeWidth="4"
-          />
-          <path
-            d="M188 488 236 510 252 563 226 603 182 615 145 584 146 533Z"
-            fill="#fdf8ef"
-            filter="url(#shadow)"
-            stroke="#cdbfaa"
-            strokeWidth="4"
-          />
-          <path
-            d="M430 214 492 244 523 320 521 403 470 496 470 614 427 739"
-            fill="none"
-            opacity="0.55"
-            stroke="#bcae97"
-            strokeDasharray="18 14"
-            strokeWidth="3"
-          />
-          <path
-            d="M210 516 232 543 228 585"
-            fill="none"
-            opacity="0.55"
-            stroke="#bcae97"
-            strokeDasharray="10 10"
-            strokeWidth="3"
-          />
-          <text
-            fill="#847866"
-            fontFamily="Georgia, serif"
-            fontSize="26"
-            x="500"
-            y="214"
-          >
-            Scotland
-          </text>
-          <text
-            fill="#847866"
-            fontFamily="Georgia, serif"
-            fontSize="24"
-            x="470"
-            y="600"
-          >
-            England
-          </text>
-          <text
-            fill="#847866"
-            fontFamily="Georgia, serif"
-            fontSize="22"
-            x="310"
-            y="760"
-          >
-            Wales
-          </text>
-          <text
-            fill="#847866"
-            fontFamily="Georgia, serif"
-            fontSize="22"
-            x="82"
-            y="652"
-          >
-            Northern Ireland
-          </text>
-        </svg>
-
-        {markers.map((marker) => {
-          const selectedInGroup = marker.facilities.some(
-            (facility) => facility.slug === selectedSlug,
-          );
-          const activeFacility =
-            marker.facilities.find((facility) => facility.slug === selectedSlug) ??
-            marker.facilities[0];
-          const color = CATEGORY_COLOR[activeFacility.category];
-          const opacity = STATUS_OPACITY[activeFacility.status];
-
-          return (
-            <button
-              aria-label={markerLabel(marker)}
-              className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-white text-white shadow-lg transition hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ink ${
-                marker.facilities.length > 1 ? 'h-12 w-12 text-sm font-semibold' : 'h-6 w-6'
-              } ${selectedInGroup ? 'ring-4 ring-ink/20' : ''}`}
-              key={marker.facilities.map((facility) => facility.slug).join(',')}
-              onClick={() => {
-                const nextFacility =
-                  marker.facilities.length === 1
-                    ? marker.facilities[0]
-                    : cycleGroup(marker.facilities, selectedSlug);
-
-                onSelect(nextFacility.slug);
-              }}
-              style={{
-                backgroundColor: color,
-                left: `${marker.x}%`,
-                opacity,
-                top: `${marker.y}%`,
-              }}
-              type="button"
-            >
-              {marker.facilities.length > 1 ? marker.facilities.length : null}
-            </button>
-          );
-        })}
-      </div>
+      <div
+        aria-label="Interactive UK compute infrastructure map"
+        className="relative aspect-[10/11] w-full bg-[linear-gradient(180deg,#f7f2e8_0%,#ede4d5_46%,#e8efe7_100%)]"
+        ref={containerRef}
+        role="region"
+      />
     </div>
   );
 }
 
+function createMarker(
+  group: GroupedMarker,
+  map: maplibregl.Map,
+  onSelectRef: RefObject<(slug: string) => void>,
+  selectedSlugRef: RefObject<string | null>,
+): maplibregl.Marker {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.setAttribute('aria-label', markerLabel(group));
+  button.dataset.slugs = group.facilities.map((f) => f.slug).join(',');
+  applyMarkerStyles(button, group, selectedSlugRef.current);
+  button.addEventListener('click', (event) => {
+    event.stopPropagation();
+    const currentSelected = selectedSlugRef.current;
+    const nextFacility =
+      group.facilities.length === 1
+        ? group.facilities[0]
+        : cycleGroup(group.facilities, currentSelected);
+    onSelectRef.current?.(nextFacility.slug);
+  });
+
+  return new maplibregl.Marker({ element: button, anchor: 'center' })
+    .setLngLat([group.lon, group.lat])
+    .addTo(map);
+}
+
+function syncSelectionStyling(
+  markers: maplibregl.Marker[],
+  groups: GroupedMarker[],
+  selectedSlug: string | null,
+) {
+  markers.forEach((marker, index) => {
+    const group = groups[index];
+    if (!group) return;
+    const element = marker.getElement() as HTMLButtonElement;
+    applyMarkerStyles(element, group, selectedSlug);
+  });
+}
+
+function applyMarkerStyles(
+  element: HTMLButtonElement,
+  group: GroupedMarker,
+  selectedSlug: string | null,
+) {
+  const isCluster = group.facilities.length > 1;
+  const selectedInGroup = group.facilities.some(
+    (facility) => facility.slug === selectedSlug,
+  );
+  const activeFacility =
+    group.facilities.find((facility) => facility.slug === selectedSlug) ??
+    group.facilities[0];
+  const color = CATEGORY_COLOR[activeFacility.category];
+  const opacity = STATUS_OPACITY[activeFacility.status];
+
+  const size = isCluster ? 40 : 14;
+  element.textContent = isCluster ? String(group.facilities.length) : '';
+  element.style.width = `${size}px`;
+  element.style.height = `${size}px`;
+  element.style.display = 'flex';
+  element.style.alignItems = 'center';
+  element.style.justifyContent = 'center';
+  element.style.padding = '0';
+  element.style.borderRadius = '9999px';
+  element.style.border = '3px solid white';
+  element.style.boxShadow = '0 4px 10px rgba(0,0,0,0.25)';
+  element.style.backgroundColor = color;
+  element.style.color = 'white';
+  element.style.fontFamily = 'inherit';
+  element.style.fontSize = isCluster ? '13px' : '0';
+  element.style.fontWeight = '600';
+  element.style.cursor = 'pointer';
+  element.style.opacity = String(opacity);
+  element.style.transition = 'transform 120ms ease, outline-color 120ms ease';
+  element.style.outline = selectedInGroup
+    ? '3px solid rgba(26,26,26,0.2)'
+    : '3px solid transparent';
+  element.style.outlineOffset = '2px';
+}
+
 function buildMarkerGroups(facilities: Facility[]): GroupedMarker[] {
   const groups: GroupedMarker[] = [];
+  // Rough screen-space threshold at INITIAL_ZOOM (~5.3) in geographic units.
+  // At zoom 5 over the UK, 1 screen pixel ~ 0.035 degrees longitude. We fold
+  // anything within CLUSTER_THRESHOLD_PX * that factor into a single group.
+  const degreesPerPixel = 0.035;
+  const threshold = CLUSTER_THRESHOLD_PX * degreesPerPixel;
 
   for (const facility of facilities) {
-    const position = project(facility.location.lon, facility.location.lat);
+    const { lon, lat } = facility.location;
     const existing = groups.find(
       (group) =>
-        Math.abs(group.x - position.x) < 2 &&
-        Math.abs(group.y - position.y) < 2,
+        Math.abs(group.lon - lon) < threshold &&
+        Math.abs(group.lat - lat) < threshold,
     );
 
     if (existing) {
       existing.facilities.push(facility);
-      existing.x = average(existing.x, position.x);
-      existing.y = average(existing.y, position.y);
+      existing.lon = average(existing.lon, lon);
+      existing.lat = average(existing.lat, lat);
     } else {
       groups.push({
         facilities: [facility],
-        x: position.x,
-        y: position.y,
+        lon,
+        lat,
       });
     }
   }
@@ -247,28 +320,14 @@ function cycleGroup(facilities: Facility[], selectedSlug: string | null) {
   return facilities[(currentIndex + 1) % facilities.length];
 }
 
-function markerLabel(marker: GroupedMarker) {
-  if (marker.facilities.length === 1) {
-    return marker.facilities[0].name;
+function markerLabel(group: GroupedMarker) {
+  if (group.facilities.length === 1) {
+    return group.facilities[0].name;
   }
 
-  return `${marker.facilities.length} facilities at this location: ${marker.facilities
+  return `${group.facilities.length} facilities at this location: ${group.facilities
     .map((facility) => facility.name)
     .join(', ')}`;
-}
-
-function project(lon: number, lat: number) {
-  const x =
-    8 +
-    ((lon - MAP_BOUNDS.minLon) / (MAP_BOUNDS.maxLon - MAP_BOUNDS.minLon)) * 84;
-  const y =
-    7 +
-    (1 -
-      (lat - MAP_BOUNDS.minLat) /
-        (MAP_BOUNDS.maxLat - MAP_BOUNDS.minLat)) *
-      86;
-
-  return { x, y };
 }
 
 function average(left: number, right: number) {

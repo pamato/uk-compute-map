@@ -28,4 +28,4 @@ Run these locally before shipping:
 
 - The site is fully static and does not require a custom runtime.
 - Facility pages are generated at build time from the JSON files under `src/data/facilities/`.
-- The current explorer uses an abstract in-repo UK map treatment rather than an external tile service, so no tile host configuration is required.
+- The basemap is served from `public/tiles/uk.pmtiles`, so Cloudflare Pages only needs to host the generated static files and the bundled PMTiles asset.
