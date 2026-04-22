@@ -27,5 +27,5 @@ Run these locally before shipping:
 
 - The site is fully static and does not require a custom runtime.
 - Facility pages are generated at build time from the JSON files under `src/data/facilities/`.
-- The basemap is served from `public/tiles/uk.pmtiles`, so Cloudflare Pages only needs to host the generated static files and the bundled PMTiles asset.
+- The basemap is served from the public R2 asset URL for `uk.pmtiles`, so Cloudflare Pages only needs to host the site assets while R2 handles PMTiles byte-range requests.
 - Cloudflare Pages can inject Web Analytics automatically, so no beacon token needs to live in the source code.

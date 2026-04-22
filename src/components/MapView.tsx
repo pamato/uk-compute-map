@@ -22,7 +22,8 @@ const STATUS_OPACITY: Record<Facility['status'], number> = {
   decommissioned: 0.22,
 };
 
-const TILE_URL = 'pmtiles:///tiles/uk.pmtiles';
+const TILE_URL =
+  'pmtiles://https://pub-7ae8668c44db4038a591a0f077bfb1ad.r2.dev/uk.pmtiles';
 const MAP_CENTRE: [number, number] = [-3.5, 54.5];
 const MAP_MAX_BOUNDS: [[number, number], [number, number]] = [
   [-11, 49],
