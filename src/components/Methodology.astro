@@ -39,9 +39,16 @@ const { lastUpdated } = Astro.props as { lastUpdated: string };
         support.
       </p>
       <p>
-        The country comparison is a hand-curated order-of-magnitude benchmark
-        for public-access AI compute. It is useful for orientation, not for
-        precise geopolitical scoring.
+        The country comparison deliberately separates source scope from the bar
+        value. The UK current figure is the published AIRR-style public
+        research-compute capacity that can be quantified today
+        (Isambard-AI plus Dawn). The US and China frontier data-centre figures
+        are derived from <a class="underline decoration-stone-400 underline-offset-4 hover:text-ink" href="https://epoch.ai/data/data-centers" rel="noreferrer" target="_blank">Epoch AI's Frontier Data Centers dataset</a>
+        by summing current H100-equivalents and converting to peak FP8
+        AI-exaflops using <a class="underline decoration-stone-400 underline-offset-4 hover:text-ink" href="https://www.nvidia.com/en-us/data-center/h100/" rel="noreferrer" target="_blank">NVIDIA's H100 SXM specification</a>
+        of 3,958 teraFLOPS FP8 per H100 SXM.
+        This is not a like-for-like public-access comparison; it is an
+        order-of-magnitude strategic capacity contrast.
       </p>
       <p class="text-xs font-semibold uppercase tracking-[0.16em] text-stone-500">
         Last updated: {lastUpdated}
