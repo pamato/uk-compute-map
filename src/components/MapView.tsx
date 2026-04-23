@@ -6,6 +6,11 @@ import { layers, namedTheme } from 'protomaps-themes-base';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import type { Facility } from '../data/schema';
+import {
+  facilityHoverLabel,
+  facilityDisplayVariant,
+  facilityTabLabel,
+} from '../lib/format';
 
 const CATEGORY_COLOR: Record<Facility['category'], string> = {
   flagship: '#1f4e79',
@@ -29,7 +34,7 @@ const MAP_MAX_BOUNDS: [[number, number], [number, number]] = [
   [-11, 49],
   [2.5, 61],
 ];
-const INITIAL_ZOOM = 5.3;
+const INITIAL_ZOOM = 4.85;
 const MIN_ZOOM = 4.5;
 const MAX_ZOOM = 10;
 
@@ -55,7 +60,7 @@ export function MapView({
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
-  const popupRef = useRef<maplibregl.Popup | null>(null);
+  const hoverPopupRef = useRef<maplibregl.Popup | null>(null);
   const featureCollection = useMemo(
     () => ({
       type: 'FeatureCollection' as const,
@@ -97,10 +102,10 @@ export function MapView({
       dragRotate: false,
       pitchWithRotate: false,
       touchPitch: false,
+      cooperativeGestures: true,
       attributionControl: { compact: true },
     });
 
-    map.scrollZoom.disable();
     map.touchZoomRotate.disableRotation();
     map.keyboard.disableRotation();
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
@@ -254,12 +259,79 @@ export function MapView({
       });
       map.on('mouseleave', 'facility-points', () => {
         map.getCanvas().style.cursor = '';
+        hoverPopupRef.current?.remove();
       });
       map.on('mouseenter', 'grouped-sites', () => {
         map.getCanvas().style.cursor = 'pointer';
       });
       map.on('mouseleave', 'grouped-sites', () => {
         map.getCanvas().style.cursor = '';
+        hoverPopupRef.current?.remove();
+      });
+
+      map.on('mousemove', 'facility-points', (event) => {
+        const feature = event.features?.[0];
+        if (!feature || feature.geometry.type !== 'Point') return;
+
+        const coordinates = feature.geometry.coordinates as [number, number];
+        const name = feature.properties?.name;
+        if (typeof name !== 'string') return;
+
+        const facility = facilities.find(
+          (item) => item.slug === feature.properties?.slug,
+        );
+
+        hoverPopupRef.current?.remove();
+        hoverPopupRef.current = new maplibregl.Popup({
+          closeButton: false,
+          closeOnClick: false,
+          offset: 14,
+          className: 'uk-compute-map-hover-popup',
+        })
+          .setLngLat(coordinates)
+          .setHTML(
+            `<div class="space-y-1">
+              ${
+                facility
+                  ? `<div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">${facility.location.city}</div>`
+                  : ''
+              }
+              <div class="font-serif text-[15px] text-stone-900">${facility ? facilityHoverLabel(facility) : name}</div>
+              ${
+                facilityDisplayVariant(facility ?? {
+                  slug: '',
+                } as Facility)
+                  ? `<div class="text-sm text-stone-600">${facilityDisplayVariant(facility as Facility)}</div>`
+                  : ''
+              }
+            </div>`,
+          )
+          .addTo(map);
+      });
+
+      map.on('mousemove', 'grouped-sites', (event) => {
+        const feature = event.features?.[0];
+        if (!feature || feature.geometry.type !== 'Point') return;
+
+        const coordinates = feature.geometry.coordinates as [number, number];
+        const groupSize = feature.properties?.groupSize;
+        const names = feature.properties?.nameList;
+
+        hoverPopupRef.current?.remove();
+        hoverPopupRef.current = new maplibregl.Popup({
+          closeButton: false,
+          closeOnClick: false,
+          offset: 14,
+          className: 'uk-compute-map-hover-popup',
+        })
+          .setLngLat(coordinates)
+          .setHTML(
+            `<div class="space-y-1">
+              <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">${groupSize} infrastructures</div>
+              <div class="text-sm text-stone-800">${typeof names === 'string' ? names : ''}</div>
+            </div>`,
+          )
+          .addTo(map);
       });
 
       map.on('click', 'facility-points', (event) => {
@@ -293,7 +365,7 @@ export function MapView({
     mapRef.current = map;
 
     return () => {
-      popupRef.current?.remove();
+      hoverPopupRef.current?.remove();
       map.remove();
       mapRef.current = null;
     };
@@ -330,8 +402,6 @@ export function MapView({
       selectedSlug ?? '',
     ]);
 
-    popupRef.current?.remove();
-
     if (!selectedSlug) return;
 
     const facility = facilities.find((item) => item.slug === selectedSlug);
@@ -343,21 +413,6 @@ export function MapView({
       duration: 650,
     });
 
-    popupRef.current = new maplibregl.Popup({
-      closeButton: false,
-      closeOnClick: false,
-      offset: 18,
-      className: 'uk-compute-map-popup',
-    })
-      .setLngLat([facility.location.lon, facility.location.lat])
-      .setHTML(
-        `<div class="space-y-1">
-          <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">${facility.location.city}</div>
-          <div class="font-serif text-base text-stone-900">${facility.name}</div>
-          <div class="text-sm text-stone-600">${facility.oneLiner}</div>
-        </div>`,
-      )
-      .addTo(map);
   }, [facilities, selectedSlug]);
 
   return (
@@ -388,7 +443,7 @@ export function MapView({
 
       <div
         aria-label="Interactive UK compute infrastructure map"
-        className="relative h-[62vh] min-h-[520px] w-full bg-[linear-gradient(180deg,rgba(247,242,232,0.68)_0%,rgba(237,228,213,0.72)_46%,rgba(232,239,231,0.76)_100%)]"
+        className="relative h-[74vh] min-h-[760px] w-full bg-[linear-gradient(180deg,rgba(247,242,232,0.68)_0%,rgba(237,228,213,0.72)_46%,rgba(232,239,231,0.76)_100%)] lg:min-h-[980px]"
         ref={containerRef}
         role="region"
       />
@@ -397,39 +452,14 @@ export function MapView({
 }
 
 function shortLabelFor(facility: Facility) {
-  const labelBySlug: Record<string, string> = {
-    'isambard-ai': 'Isambard-AI',
-    dawn: 'Dawn',
-    sunrise: 'Sunrise',
-    'epcc-national': 'EPCC',
-    archer2: 'ARCHER2',
-    'mary-coombs': 'Mary Coombs',
-    'met-office': 'Met Office',
-    eidf: 'EIDF',
-    jasmin: 'JASMIN',
-    iris: 'IRIS',
-    'kelvin-2': 'Kelvin-2',
-    cirrus: 'Cirrus',
-    bede: 'Bede',
-    'young-mmm': 'Young',
-    csd3: 'CSD3',
-    'gridpp-ral': 'GridPP',
-    'dirac-tursa': 'Tursa',
-    'dirac-csd3': 'DiRAC CSD3',
-    'dirac-leicester': 'DiRAC Leicester',
-    'dirac-durham': 'DiRAC Durham',
-    awe: 'AWE',
-    'isambard-3': 'Isambard 3',
-  };
-
-  return labelBySlug[facility.slug] ?? facility.name;
+  return facilityTabLabel(facility);
 }
 
 function buildSiteFeatures(facilities: Facility[]) {
   const grouped = new Map<string, Facility[]>();
 
   for (const facility of facilities) {
-    const key = `${facility.location.lat}:${facility.location.lon}`;
+    const key = `${facility.location.city.toLowerCase()}|${facility.location.nation.toLowerCase()}`;
     const existing = grouped.get(key) ?? [];
     existing.push(facility);
     grouped.set(key, existing);
@@ -437,12 +467,16 @@ function buildSiteFeatures(facilities: Facility[]) {
 
   return Array.from(grouped.values()).map((group) => {
     const primary = group[0];
+    const averageLon =
+      group.reduce((sum, facility) => sum + facility.location.lon, 0) / group.length;
+    const averageLat =
+      group.reduce((sum, facility) => sum + facility.location.lat, 0) / group.length;
 
     return {
       type: 'Feature' as const,
       geometry: {
         type: 'Point' as const,
-        coordinates: [primary.location.lon, primary.location.lat] as [
+        coordinates: [averageLon, averageLat] as [
           number,
           number,
         ],
@@ -450,6 +484,7 @@ function buildSiteFeatures(facilities: Facility[]) {
       properties: {
         slug: primary.slug,
         slugList: group.map((facility) => facility.slug).join('|'),
+        nameList: group.map((facility) => facilityTabLabel(facility)).join(' • '),
         name: primary.name,
         shortLabel: shortLabelFor(primary),
         category: primary.category,
