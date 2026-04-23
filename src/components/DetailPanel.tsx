@@ -1,7 +1,14 @@
 import { useEffect, useRef } from 'react';
 
 import type { Facility } from '../data/schema';
-import { formatExaflops, formatYearMonth } from '../lib/format';
+import {
+  facilityDisplayInstitution,
+  facilityDisplayName,
+  facilityDisplayVariant,
+  facilityTabLabel,
+  formatExaflops,
+  formatYearMonth,
+} from '../lib/format';
 import { CategoryPill } from './CategoryPill';
 import { Sources } from './Sources';
 import { StatusBadge } from './StatusBadge';
@@ -81,7 +88,7 @@ export function DetailPanel({
                     onClick={() => onSelectFacility(candidate.slug)}
                     type="button"
                   >
-                    {siteTabLabel(candidate)}
+                    {facilityTabLabel(candidate)}
                   </button>
                 );
               })}
@@ -95,10 +102,15 @@ export function DetailPanel({
               Facility detail
             </p>
             <h2 className="mt-2 text-3xl font-serif" id="detail-panel-title">
-              {facility.name}
+              {facilityDisplayName(facility)}
             </h2>
+            {facilityDisplayVariant(facility) ? (
+              <p className="mt-1 text-sm uppercase tracking-[0.16em] text-stone-500">
+                {facilityDisplayVariant(facility)}
+              </p>
+            ) : null}
             <p className="mt-2 text-sm text-stone-600">
-              {facility.location.institution}, {facility.location.city},{' '}
+              {facilityDisplayInstitution(facility)}, {facility.location.city},{' '}
               {facility.location.nation}
             </p>
           </div>
@@ -188,15 +200,4 @@ function Fact({ label, value }: { label: string; value: string }) {
       <dd className="mt-1 text-sm leading-relaxed text-stone-800">{value}</dd>
     </div>
   );
-}
-
-function siteTabLabel(facility: Facility) {
-  const labels: Record<string, string> = {
-    'dirac-durham': 'DiRAC Durham',
-    'dirac-csd3': 'DiRAC CSD3',
-    'dirac-leicester': 'DiRAC Leicester',
-    'dirac-tursa': 'DiRAC Tursa',
-  };
-
-  return labels[facility.slug] ?? facility.name;
 }
